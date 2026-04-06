@@ -4,26 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Festival Lineup Wizard — Coachella 2026</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{--rust:#C4561A;--rust-l:#E8733A;--night:#1A1410;--night2:#2C2318;--night3:#3D3228;--text:#F0E6CC;--muted:#A89070;--gold:#D4A843;--gold-l:#F0C865;}
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;background:var(--night)}
-#app{font-family:'DM Sans',sans-serif;background:var(--night);color:var(--text);min-height:100vh;max-width:900px;margin:0 auto}
-.hdr{background:var(--night2);border-bottom:1px solid var(--night3);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;position:sticky;top:0;z-index:10}
+html,body{background:var(--night);min-height:100%}
+#app{font-family:'DM Sans',sans-serif;background:var(--night);color:var(--text);max-width:960px;margin:0 auto;min-height:100vh}
+.hdr{background:var(--night2);border-bottom:1px solid var(--night3);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;position:sticky;top:0;z-index:20}
 .htitle{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;color:var(--gold);line-height:1}
 .hsub{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
 .wk-toggle{display:flex;gap:4px}
-.wk-btn{font-size:12px;font-weight:500;padding:5px 13px;border-radius:20px;border:1px solid var(--night3);background:var(--night);color:var(--muted);cursor:pointer;transition:all .2s}
-.wk-btn.wk1{border-color:#E8733A;color:#E8733A}
-.wk-btn.wk1.active{background:#E8733A;color:#fff}
-.wk-btn.wk2{border-color:#C46080;color:#C46080}
-.wk-btn.wk2.active{background:#C46080;color:#fff}
-.wk-btn.wkb{border-color:var(--gold);color:var(--gold)}
-.wk-btn.wkb.active{background:var(--gold);color:var(--night)}
-.tabs{display:flex;background:var(--night2);border-bottom:1px solid var(--night3);padding:0 16px;gap:2px;overflow-x:auto;position:sticky;top:57px;z-index:9}
-.tab{font-size:12px;font-weight:500;padding:9px 13px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+.wk-btn{font-size:12px;font-weight:500;padding:5px 12px;border-radius:20px;border:1px solid var(--night3);background:var(--night);color:var(--muted);cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
+.wk-btn.wk1{border-color:#E8733A;color:#E8733A}.wk-btn.wk1.active{background:#E8733A;color:#fff}
+.wk-btn.wk2{border-color:#C46080;color:#C46080}.wk-btn.wk2.active{background:#C46080;color:#fff}
+.wk-btn.wkb{border-color:var(--gold);color:var(--gold)}.wk-btn.wkb.active{background:var(--gold);color:var(--night)}
+.tabs{display:flex;background:var(--night2);border-bottom:1px solid var(--night3);padding:0 16px;gap:2px;overflow-x:auto;position:sticky;top:57px;z-index:19}
+.tab{font-size:12px;font-weight:500;padding:9px 13px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;font-family:'DM Sans',sans-serif}
 .tab.active{color:var(--gold);border-bottom-color:var(--gold)}
 .tab:disabled{opacity:.3;cursor:not-allowed}
 .panel{display:none;padding:16px}
@@ -34,7 +30,7 @@ html,body{height:100%;background:var(--night)}
 .filter-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:7px}
 .fb{font-size:10px;font-weight:500;padding:3px 9px;border-radius:16px;border:1px solid var(--night3);background:var(--night2);color:var(--muted);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
 .fb.active{background:var(--rust);border-color:var(--rust);color:#fff}
-.artist-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:6px;max-height:400px;overflow-y:auto;padding-right:3px}
+.artist-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:6px;max-height:390px;overflow-y:auto;padding-right:3px}
 .artist-grid::-webkit-scrollbar{width:3px}
 .artist-grid::-webkit-scrollbar-track{background:var(--night)}
 .artist-grid::-webkit-scrollbar-thumb{background:var(--night3);border-radius:2px}
@@ -54,12 +50,15 @@ html,body{height:100%;background:var(--night)}
 .btn-p:disabled{opacity:.4;cursor:not-allowed}
 .btn-s{font-size:11px;font-weight:500;padding:5px 12px;background:var(--night3);color:var(--text);border:none;border-radius:5px;cursor:pointer;font-family:'DM Sans',sans-serif}
 .btn-s:hover{outline:1px solid var(--rust)}
+.btn-warn{font-size:11px;font-weight:500;padding:5px 12px;background:transparent;color:#E07070;border:1px solid #8C3030;border-radius:5px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.btn-warn:hover{background:#2C0E0E}
 .bwrap{max-width:560px;margin:0 auto}
 .bprog{display:flex;align-items:center;gap:10px;margin-bottom:14px}
 .pb{flex:1;height:3px;background:var(--night3);border-radius:2px;overflow:hidden}
 .pf{height:100%;background:var(--rust);border-radius:2px;transition:width .4s}
 .pl{font-size:11px;color:var(--muted);white-space:nowrap}
-.blbl{text-align:center;font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:2px;color:var(--rust);margin-bottom:12px}
+.blbl{text-align:center;font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:2px;color:var(--rust);margin-bottom:6px}
+.bsub{text-align:center;font-size:11px;color:var(--muted);margin-bottom:12px}
 .bcards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:10px}
 .bcard{background:var(--night2);border:1px solid var(--night3);border-radius:10px;overflow:hidden;cursor:pointer;transition:all .2s}
 .bcard:hover{border-color:var(--rust-l);transform:translateY(-2px)}
@@ -71,16 +70,21 @@ html,body{height:100%;background:var(--night)}
 .skip-btn{width:100%;background:none;border:1px solid var(--night3);color:var(--muted);font-size:12px;padding:7px;border-radius:6px;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
 .skip-btn:hover{border-color:var(--muted);color:var(--text)}
 .rlist{display:flex;flex-direction:column;gap:5px;max-height:420px;overflow-y:auto;padding-right:3px}
-.rrow{display:flex;align-items:center;gap:9px;background:var(--night2);border:1px solid var(--night3);border-radius:7px;padding:8px 11px}
+.rrow{display:flex;align-items:center;gap:9px;background:var(--night2);border:1px solid var(--night3);border-radius:7px;padding:8px 11px;transition:all .15s}
 .rrank{font-family:'Bebas Neue',sans-serif;font-size:17px;color:var(--muted);width:24px;text-align:right;flex-shrink:0}
-.rimg{width:30px;height:30px;border-radius:50%;object-fit:cover;background:var(--night3);flex-shrink:0}
-.rph{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500}
+.rimg{width:34px;height:34px;border-radius:50%;object-fit:cover;background:var(--night3);flex-shrink:0}
+.rph{width:34px;height:34px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500}
 .rinfo{flex:1;min-width:0}
 .rname{font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rmeta{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
-.rbarbg{height:3px;background:var(--night3);border-radius:2px;overflow:hidden;width:90px;flex-shrink:0}
+.rbarbg{height:3px;background:var(--night3);border-radius:2px;overflow:hidden;width:80px;flex-shrink:0}
 .rbarfill{height:100%;border-radius:2px}
 .rscore{font-size:13px;font-weight:500;width:28px;text-align:right;flex-shrink:0}
+.ractions{display:flex;gap:4px;flex-shrink:0}
+.raction{font-size:10px;padding:2px 7px;border-radius:4px;border:1px solid var(--night3);background:none;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.raction:hover{border-color:var(--rust-l);color:var(--rust-l)}
+.raction.remove{color:#E07070;border-color:#4C2020}
+.raction.remove:hover{background:#2C0E0E;border-color:#8C3030}
 .tdiv{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);padding:6px 0 2px;font-weight:500}
 .tbadge{font-size:9px;font-weight:500;letter-spacing:.5px;padding:1px 6px;border-radius:3px;text-transform:uppercase}
 .charts-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
@@ -90,9 +94,9 @@ html,body{height:100%;background:var(--night)}
 .fact-card{background:var(--night2);border-left:3px solid var(--gold);border-radius:0 7px 7px 0;padding:10px 12px}
 .fact-text{font-size:12px;color:var(--text);line-height:1.5}
 .fact-sub{font-size:11px;color:var(--muted);margin-top:3px}
-.schbox{background:var(--night2);border:1px dashed var(--night3);border-radius:10px;padding:32px 16px;text-align:center}
+.schbox{background:var(--night2);border:1px dashed var(--night3);border-radius:10px;padding:28px 14px;text-align:center}
 .scht{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
-.schtxt{font-size:13px;color:var(--muted);line-height:1.6}
+.schtxt{font-size:12px;color:var(--muted);line-height:1.6}
 .leg{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;justify-content:center}
 .legi{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
 .legd{width:9px;height:9px;border-radius:2px;flex-shrink:0}
@@ -100,6 +104,19 @@ html,body{height:100%;background:var(--night)}
 .mslots{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px}
 .mslot{padding:4px 9px;border-radius:4px;font-size:10px;font-weight:500;border:1px solid transparent}
 .wk-banner{border-radius:7px;padding:9px 13px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;border:1px solid var(--night3)}
+.save-indicator{font-size:10px;color:var(--muted);display:flex;align-items:center;gap:4px;margin-bottom:8px}
+.save-dot{width:6px;height:6px;border-radius:50%;background:#4A8C5C}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:var(--night2);border:1px solid var(--night3);border-radius:12px;padding:20px;max-width:400px;width:100%}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px}
+.modal-text{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:16px}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end}
+.results-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.results-hdr-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--gold)}
+.results-hdr-actions{display:flex;gap:6px}
+.calib-wrap{background:var(--night2);border:1px solid var(--gold);border-radius:8px;padding:12px 14px;margin-bottom:12px}
+.calib-title{font-size:11px;color:var(--gold-l);font-weight:500;margin-bottom:4px;letter-spacing:.5px;text-transform:uppercase}
+.calib-text{font-size:12px;color:var(--muted);margin-bottom:10px}
 </style>
 </head>
 <body>
@@ -122,12 +139,20 @@ html,body{height:100%;background:var(--night)}
   <button class="tab" onclick="goTab('schedule')" id="tab-schedule" disabled>4 · Schedule</button>
 </div>
 
+<!-- LINEUP -->
 <div class="panel active" id="panel-lineup">
+  <div id="restore-banner" style="display:none;background:#1C2A1C;border:1px solid #4A8C5C;border-radius:7px;padding:10px 14px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+    <div style="font-size:12px;color:#6AB87A">Saved session restored — <span id="restore-info"></span></div>
+    <div style="display:flex;gap:6px">
+      <button class="btn-s" onclick="goTab('results')" style="background:#1A3A1A;color:#6AB87A;border:1px solid #4A8C5C">Resume Rankings</button>
+      <button class="btn-warn" onclick="confirmReset()">Start Over</button>
+    </div>
+  </div>
   <div class="wk-banner" id="wk-banner-el">
     <div style="font-size:12px;color:var(--muted)">Showing: <span id="wk-label" style="font-weight:500">Weekend 1 (Apr 10–12)</span></div>
     <div style="display:flex;gap:5px">
       <button class="btn-s" onclick="selAll()">Select all visible</button>
-      <button class="btn-s" onclick="clearAll()">Clear</button>
+      <button class="btn-s" onclick="clearSel()">Clear</button>
     </div>
   </div>
   <input class="search-bar" type="text" placeholder="Search artists..." id="search-input" oninput="doFilter()">
@@ -140,21 +165,36 @@ html,body{height:100%;background:var(--night)}
   </div>
 </div>
 
+<!-- BATTLE -->
 <div class="panel" id="panel-battle">
   <div class="bwrap">
     <div class="bprog"><div class="pb"><div class="pf" id="pf" style="width:0%"></div></div><div class="pl" id="pl">0/0</div></div>
-    <div class="blbl">WHO WOULD YOU RATHER SEE?</div>
+    <div class="blbl" id="battle-mode-label">WHO WOULD YOU RATHER SEE?</div>
+    <div class="bsub" id="battle-sub" style="display:none"></div>
     <div class="bcards" id="bcards"></div>
     <button class="skip-btn" onclick="skip()">Can't decide — skip this matchup</button>
     <div style="margin-top:8px;text-align:center"><button class="btn-s" onclick="earlyFinish()">Finish early & see results</button></div>
   </div>
 </div>
 
+<!-- RESULTS -->
 <div class="panel" id="panel-results">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-    <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--gold)">Your Rankings</div>
-    <button class="btn-p" onclick="goTab('schedule')" style="font-size:12px;padding:5px 14px">View Schedule</button>
+  <div class="results-hdr">
+    <div class="results-hdr-title">Your Rankings</div>
+    <div class="results-hdr-actions">
+      <button class="btn-s" onclick="goTab('schedule')">View Schedule</button>
+      <button class="btn-warn" onclick="confirmReset()">Start Over</button>
+    </div>
   </div>
+  <div id="calib-section" style="display:none">
+    <div class="calib-wrap">
+      <div class="calib-title">Calibrating new artist</div>
+      <div class="calib-text" id="calib-text">Answer a few quick matchups to slot this artist into your rankings.</div>
+      <div class="bcards" id="calib-cards"></div>
+      <button class="skip-btn" onclick="skipCalib()" style="margin-top:0">Skip this matchup</button>
+    </div>
+  </div>
+  <div class="save-indicator"><div class="save-dot"></div><span id="save-time">Rankings auto-saved</span></div>
   <div class="charts-row">
     <div class="chart-box">
       <div class="chart-title">Genre Breakdown</div>
@@ -171,118 +211,144 @@ html,body{height:100%;background:var(--night)}
   <div class="rlist" id="rlist"></div>
 </div>
 
+<!-- SCHEDULE -->
 <div class="panel" id="panel-schedule">
   <div class="schbox">
     <div class="scht">Set Times Coming Soon</div>
-    <div class="schtxt">Coachella typically drops set times ~4 days before Weekend 1.<br>Once released, paste them in and your tier overlay will apply automatically.</div>
+    <div class="schtxt">Coachella drops set times ~4 days before Weekend 1.<br>Your tier overlay applies to the full grid when they release.</div>
     <div class="leg" id="sch-leg"></div>
     <div id="mock-sch"></div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div id="reset-modal" style="display:none" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-title">Start Over?</div>
+    <div class="modal-text">This will clear all your battle results and rankings. Your artist selection will be preserved so you can adjust it before re-running battles.</div>
+    <div class="modal-actions">
+      <button class="btn-s" onclick="closeModal()">Cancel</button>
+      <button class="btn-warn" onclick="doReset()">Yes, Start Over</button>
+    </div>
   </div>
 </div>
 </div>
 
 <script>
+const STORAGE_KEY='flw_coachella2026_v2';
 const SC={"Coachella Stage":"#C4561A","Outdoor Theatre":"#7B5EA7","Sahara":"#4A90C4","Mojave":"#4A8C5C","Gobi":"#D4A843","Sonora":"#C46080","Yuma":"#6080C4","Do LaB":"#8C4AAC","Heineken House":"#2E7D32","Quasar":"#1A6080","Bunker":"#303030"};
-const GC={"Pop":{bg:"#2C1A2C",t:"#D4A0D4",p:"#7B4F8C"},"Electronic":{bg:"#0E1C2C",t:"#6AAEEE",p:"#2A5A8C"},"Hip-Hop":{bg:"#1C1A0C",t:"#D4B84A",p:"#8C7020"},"Rock":{bg:"#1C0E0E",t:"#D47070",p:"#8C3030"},"Indie":{bg:"#0E1C14",t:"#6AC47A",p:"#2A6C3C"},"K-Pop":{bg:"#1C0E1C",t:"#E490D0",p:"#8C3A6C"},"Latin":{bg:"#1C120E",t:"#E09060",p:"#8C4C20"},"R&B":{bg:"#180C1C",t:"#B078D4",p:"#6A3490"},"Punk":{bg:"#1C0E0E",t:"#E07070",p:"#8C3030"},"Industrial":{bg:"#141414",t:"#B0B0B0",p:"#505050"},"Jazz/Pop":{bg:"#0E1818",t:"#60C0B0",p:"#208070"},"Art Pop":{bg:"#1A0E1C",t:"#D080E0",p:"#803090"},"Post-Punk":{bg:"#14100E",t:"#C09080",p:"#705040"},"Indie Rock":{bg:"#0E160C",t:"#80C070",p:"#406030"},"New Wave":{bg:"#0C141C",t:"#60A0D0",p:"#205070"},"Art Rock":{bg:"#1C180E",t:"#D0B060",p:"#806020"},"Dance-Punk":{bg:"#1C0C14",t:"#D06090",p:"#802040"},"Trance":{bg:"#0C0E1C",t:"#7090E0",p:"#203480"},"House":{bg:"#0C1810",t:"#50C080",p:"#106040"},"Bass/EDM":{bg:"#1C100E",t:"#E08050",p:"#803020"},"Soul/Pop":{bg:"#1C140E",t:"#D0A060",p:"#805020"},"UK Rap":{bg:"#141418",t:"#A0A0C0",p:"#404060"},"Drum & Bass":{bg:"#100C1C",t:"#9080D0",p:"#4030A0"},"Techno":{bg:"#101010",t:"#C0C0C0",p:"#404040"},"Reggae":{bg:"#0C180C",t:"#50C050",p:"#106010"},"Punk/Metal":{bg:"#1C0808",t:"#E06060",p:"#902020"},"DJ Set":{bg:"#141414",t:"#A0A0A0",p:"#484848"},"Indie Pop":{bg:"#0E1A0E",t:"#80C880",p:"#306030"},"Alt R&B":{bg:"#180C1C",t:"#B078D4",p:"#6A3490"}};
+const GC={"Pop":{bg:"#2C1A2C",t:"#D4A0D4",p:"#7B4F8C"},"Electronic":{bg:"#0E1C2C",t:"#6AAEEE",p:"#2A5A8C"},"Hip-Hop":{bg:"#1C1A0C",t:"#D4B84A",p:"#8C7020"},"Rock":{bg:"#1C0E0E",t:"#D47070",p:"#8C3030"},"Indie":{bg:"#0E1C14",t:"#6AC47A",p:"#2A6C3C"},"K-Pop":{bg:"#1C0E1C",t:"#E490D0",p:"#8C3A6C"},"Latin":{bg:"#1C120E",t:"#E09060",p:"#8C4C20"},"R&B":{bg:"#180C1C",t:"#B078D4",p:"#6A3490"},"Punk":{bg:"#1C0E0E",t:"#E07070",p:"#8C3030"},"Industrial":{bg:"#141414",t:"#B0B0B0",p:"#505050"},"Jazz/Pop":{bg:"#0E1818",t:"#60C0B0",p:"#208070"},"Art Pop":{bg:"#1A0E1C",t:"#D080E0",p:"#803090"},"Post-Punk":{bg:"#14100E",t:"#C09080",p:"#705040"},"Indie Rock":{bg:"#0E160C",t:"#80C070",p:"#406030"},"New Wave":{bg:"#0C141C",t:"#60A0D0",p:"#205070"},"Art Rock":{bg:"#1C180E",t:"#D0B060",p:"#806020"},"Dance-Punk":{bg:"#1C0C14",t:"#D06090",p:"#802040"},"Trance":{bg:"#0C0E1C",t:"#7090E0",p:"#203480"},"House":{bg:"#0C1810",t:"#50C080",p:"#106040"},"Bass/EDM":{bg:"#1C100E",t:"#E08050",p:"#803020"},"Soul/Pop":{bg:"#1C140E",t:"#D0A060",p:"#805020"},"UK Rap":{bg:"#141418",t:"#A0A0C0",p:"#404060"},"Drum & Bass":{bg:"#100C1C",t:"#9080D0",p:"#4030A0"},"Techno":{bg:"#101010",t:"#C0C0C0",p:"#404040"},"Reggae":{bg:"#0C180C",t:"#50C050",p:"#106010"},"Punk/Metal":{bg:"#1C0808",t:"#E06060",p:"#902020"},"DJ Set":{bg:"#141414",t:"#A0A0A0",p:"#484848"},"Indie Pop":{bg:"#0E1A0E",t:"#80C880",p:"#306030"},"Alt R&B":{bg:"#180C1C",t:"#B078D4",p:"#6A3490"},"J-Pop":{bg:"#1A0E18",t:"#E080C0",p:"#8C3080"},"Afrobeats":{bg:"#1A1A08",t:"#D0C050",p:"#806010"}};
 function gs(g){const b=g?g.split('/')[0].trim():'';return GC[g]||GC[b]||{bg:"#181410",t:"#A09080",p:"#504030"};}
 const WKC={1:{banner:"#3D1E0A",border:"#E8733A",label:"#E8733A",text:"Weekend 1 (Apr 10–12)"},2:{banner:"#2A0E1C",border:"#C46080",label:"#E080A0",text:"Weekend 2 (Apr 17–19)"},0:{banner:"#1C1A08",border:"#D4A843",label:"#F0C865",text:"Both Weekends"}};
-const PIE=['#C4561A','#4A90C4','#7B5EA7','#4A8C5C','#D4A843','#C46080','#5C8A4A','#6080C4','#8C4AAC','#2E7D32','#1A6080','#805030'];
+const PIE=['#C4561A','#4A90C4','#7B5EA7','#4A8C5C','#D4A843','#C46080','#5C8A4A','#6080C4','#8C4AAC','#2E7D32','#1A6080','#805030','#A04050','#308080'];
 
+// ARTIST DATABASE - wk: 0=both, 1=wk1 only, 2=wk2 only
 const RAW=[
+// MAIN STAGES - both weekends
 {n:"Sabrina Carpenter",g:"Pop",day:"Fri",stage:"Coachella Stage",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb416b1c49c0e1a60b2bce1490"},
 {n:"Justin Bieber",g:"Pop",day:"Sat",stage:"Coachella Stage",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb8ae7f2aaa9817a704a87ea36"},
 {n:"Karol G",g:"Latin",day:"Sun",stage:"Coachella Stage",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb19fc5c9a8be3c8ff11f0a897"},
 {n:"Anyma (Æden)",g:"Electronic",day:"Sun",stage:"Coachella Stage",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb3e4fc0e39d56b0c3a92b1614"},
+{n:"Kaskade",g:"Electronic",day:"Sun",stage:"Coachella Stage",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb3eb1b3b45bc8d6f56e3b49d7"},
 {n:"The xx",g:"Indie",day:"Fri",stage:"Outdoor Theatre",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb55d39209a5b7c369afcfabd6"},
 {n:"The Strokes",g:"Rock",day:"Sat",stage:"Outdoor Theatre",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb5edc1c57ea8ebb3cc9ec24b2"},
 {n:"BIGBANG",g:"K-Pop",day:"Sun",stage:"Outdoor Theatre",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb67e84b4b4cbf24c7ae7d14a3"},
-{n:"Nine Inch Noize",g:"Industrial",day:"Fri",stage:"Sahara",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb7b91a30c5ddeb4e6fc1562db"},
 {n:"Young Thug",g:"Hip-Hop",day:"Sun",stage:"Outdoor Theatre",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb36ee5fd12a49c26aa47df4e1"},
-{n:"Disclosure",g:"Electronic",day:"Fri",stage:"Sahara",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb3bc5be7f05ce7cf5fb09b9b9"},
 {n:"Laufey",g:"Jazz/Pop",day:"Sun",stage:"Outdoor Theatre",wk:0,img:"https://i.scdn.co/image/ab6761610000e5ebfd47f900feaca96d5ee1abc9"},
 {n:"FKA Twigs",g:"Alt R&B",day:"Sun",stage:"Outdoor Theatre",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb9e1c36d83c6c1bb30c5e6abe"},
 {n:"Ethel Cain",g:"Art Pop",day:"Fri",stage:"Outdoor Theatre",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb56e3baa37c4a60ac87d826ef"},
-{n:"Turnstile",g:"Punk",day:"Fri",stage:"Mojave",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb3e7b0f8e9e2cc9e5b0bb5c81"},
+{n:"Alex G",g:"Indie",day:"Fri",stage:"Outdoor Theatre",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb1b92e5b45d89a62b25de7e2e"},
 {n:"Iggy Pop",g:"Rock",day:"Sun",stage:"Outdoor Theatre",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb4d9ede5a7aaeb7f1c6c03d30"},
-{n:"PinkPantheress",g:"Electronic",day:"Sat",stage:"Sahara",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb4e2e9ad59cee27d17e6f1b5a"},
+{n:"Clipse",g:"Hip-Hop",day:"Sat",stage:"Outdoor Theatre",wk:0,img:"https://i.scdn.co/image/ab6761610000e5ebc19e2a2ab06aba37ee6c67f7"},
+{n:"Teddy Swims",g:"Soul/Pop",day:"Fri",stage:"Outdoor Theatre",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb6dac7cd1e5ea4e48d5e7a2cd"},
+{n:"Foster the People",g:"Indie Pop",day:"Sat",stage:"Outdoor Theatre",wk:0,img:"https://i.scdn.co/image/ab6761610000e5ebbc3cba3f44d07a4f1b9c4d3e"},
+{n:"David Byrne",g:"Art Rock",day:"Sat",stage:"Outdoor Theatre",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eba5a7c8d19daf5f59ad7f5b67"},
+{n:"Giveon",g:"R&B",day:"Sat",stage:"Outdoor Theatre",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb2d5bb9e6b7d5d6f0e8e4e8d4"},
+{n:"Labrinth",g:"Electronic",day:"Sat",stage:"Outdoor Theatre",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb7e2f4b3d8c2a1e9f5d3b7e1a"},
+{n:"Röyksopp",g:"Electronic",day:"Sat",stage:"Outdoor Theatre",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb4e8eba50e1a29df7e6bd6a7e"},
 {n:"Little Simz",g:"Hip-Hop",day:"Sun",stage:"Mojave",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb2c01ecbbbc56be51a9bbc1cc"},
 {n:"Wet Leg",g:"Indie Rock",day:"Sun",stage:"Mojave",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb4bb6a0abd62fd2d84b434faf"},
-{n:"Alex G",g:"Indie",day:"Fri",stage:"Outdoor Theatre",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb1b92e5b45d89a62b25de7e2e"},
 {n:"Interpol",g:"Post-Punk",day:"Sat",stage:"Mojave",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb0d5f8f86d0c5d0a4e1be4b7a"},
-{n:"Clipse",g:"Hip-Hop",day:"Sat",stage:"Outdoor Theatre",wk:0,img:"https://i.scdn.co/image/ab6761610000e5ebc19e2a2ab06aba37ee6c67f7"},
-{n:"Addison Rae",g:"Pop",day:"Sat",stage:"Sahara",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb8e8d84cf64fa4cb0c8c38e9e"},
-{n:"Blood Orange",g:"R&B",day:"Fri",stage:"Gobi",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb4c8c9b0b8e13a3e2d5f8b4d2"},
-{n:"Foster the People",g:"Indie Pop",day:"Sat",stage:"Outdoor Theatre",wk:0,img:"https://i.scdn.co/image/ab6761610000e5ebbc3cba3f44d07a4f1b9c4d3e"},
-{n:"Teddy Swims",g:"Soul/Pop",day:"Fri",stage:"Outdoor Theatre",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb6dac7cd1e5ea4e48d5e7a2cd"},
+{n:"Turnstile",g:"Punk",day:"Fri",stage:"Mojave",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb3e7b0f8e9e2cc9e5b0bb5c81"},
 {n:"Devo",g:"New Wave",day:"Fri",stage:"Mojave",wk:0,img:"https://i.scdn.co/image/ab6761610000e5ebe31b8baaea8c71843f29cde5"},
-{n:"David Byrne",g:"Art Rock",day:"Sat",stage:"Outdoor Theatre",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eba5a7c8d19daf5f59ad7f5b67"},
-{n:"Major Lazer",g:"Electronic",day:"Sun",stage:"Sahara",wk:0,img:"https://i.scdn.co/image/ab6761610000e5ebf52ddc8acba8b9ed0fa41dd4"},
-{n:"Solomun",g:"House",day:"Sat",stage:"Yuma",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb7bde0e3c41fa28c8cde9b07b"},
-{n:"Adriatique",g:"Electronic",day:"Fri",stage:"Yuma",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb8d9e25a2e31de4b01fdb2e5a"},
-{n:"Röyksopp",g:"Electronic",day:"Sat",stage:"Outdoor Theatre",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb4e8eba50e1a29df7e6bd6a7e"},
-{n:"Moby",g:"Electronic",day:"Sat",stage:"Gobi",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb8e40c8aebaa98d5c72b7c481"},
-{n:"Boys Noize",g:"Electronic",day:"Fri",stage:"Sahara",wk:0,img:"https://i.scdn.co/image/ab6761610000e5ebe7a4a4d71d9a3db2eaf7d8a3"},
-{n:"Subtronics",g:"Bass/EDM",day:"Sat",stage:"Sahara",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb17e2e5d4a82d94b6e3e5e9d4"},
-{n:"Blondshell",g:"Indie Rock",day:"Sat",stage:"Gobi",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb9f14cd13ac6e5a7e2d9bfe2f"},
-{n:"Joyce Manor",g:"Punk",day:"Sun",stage:"Gobi",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb4eeb1d57aedc07e5cae9b43c"},
 {n:"Sexyy Red",g:"Hip-Hop",day:"Fri",stage:"Mojave",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb55f70e43e35a9cf3bb01f3c7"},
-{n:"Central Cee",g:"UK Rap",day:"Fri",stage:"Sahara",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eba26bbb5d8ac0c5ef8726a9c7"},
-{n:"Kaskade",g:"Electronic",day:"Sun",stage:"Coachella Stage",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb3eb1b3b45bc8d6f56e3b49d7"},
-{n:"Green Velvet",g:"House",day:"Sat",stage:"Yuma",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eba2c4a6cd7e8b4b234f4d90ce"},
-{n:"Armin van Buuren",g:"Trance",day:"Fri",stage:"Sahara",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb4c5c726be52d6bbda5fa84b6"},
-{n:"Giveon",g:"R&B",day:"Sat",stage:"Outdoor Theatre",wk:0,img:null},
-{n:"Labrinth",g:"Electronic",day:"Sat",stage:"Outdoor Theatre",wk:0,img:null},
-{n:"Carlita",g:"Electronic",day:"Sat",stage:"Yuma",wk:0,img:null},
-{n:"Chloé Caillet",g:"Electronic",day:"Fri",stage:"Yuma",wk:0,img:null},
-{n:"BINI",g:"K-Pop",day:"Fri",stage:"Sonora",wk:0,img:null},
-{n:"Katseye",g:"K-Pop",day:"Fri",stage:"Sonora",wk:0,img:null},
-{n:"Dijon",g:"R&B",day:"Sun",stage:"Gobi",wk:0,img:null},
-{n:"Wednesday",g:"Indie Rock",day:"Sat",stage:"Gobi",wk:0,img:null},
-{n:"Sombr",g:"Indie Pop",day:"Sat",stage:"Gobi",wk:0,img:null},
-{n:"Swae Lee",g:"Hip-Hop",day:"Sun",stage:"Sahara",wk:0,img:null},
-{n:"Geese",g:"Indie Rock",day:"Sat",stage:"Mojave",wk:0,img:null},
-{n:"Suicidal Tendencies",g:"Punk/Metal",day:"Sun",stage:"Mojave",wk:0,img:null},
+{n:"Geese",g:"Indie Rock",day:"Sat",stage:"Mojave",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb8f3b4a2d6e1c9f0e7b5a3d2c"},
 {n:"Black Flag",g:"Punk",day:"Fri",stage:"Mojave",wk:0,img:null},
-{n:"CMAT",g:"Indie Pop",day:"Fri",stage:"Gobi",wk:0,img:null},
-{n:"Groove Armada",g:"Electronic",day:"Fri",stage:"Sahara",wk:0,img:null},
-{n:"Noga Erez",g:"Electronic",day:"Sat",stage:"Sonora",wk:0,img:null},
-{n:"Los Retros",g:"Indie",day:"Sun",stage:"Sonora",wk:0,img:null},
-{n:"Rezz",g:"Electronic",day:"Sat",stage:"Sahara",wk:0,img:null},
-{n:"Model/Actriz",g:"Post-Punk",day:"Sat",stage:"Sonora",wk:0,img:null},
-{n:"Lambrini Girls",g:"Punk",day:"Fri",stage:"Sonora",wk:0,img:null},
-{n:"Fleshwater",g:"Post-Punk",day:"Fri",stage:"Gobi",wk:0,img:null},
+{n:"Suicidal Tendencies",g:"Punk/Metal",day:"Sun",stage:"Mojave",wk:0,img:null},
 {n:"Ceremony",g:"Post-Punk",day:"Sat",stage:"Mojave",wk:0,img:null},
-{n:"Slayyyter",g:"Electronic",day:"Fri",stage:"Sahara",wk:0,img:null},
-{n:"Hot Mulligan",g:"Punk",day:"Fri",stage:"Sonora",wk:0,img:null},
-{n:"DRAIN",g:"Punk/Metal",day:"Sun",stage:"Sonora",wk:0,img:null},
+{n:"The Rapture",g:"Dance-Punk",day:"Sun",stage:"Mojave",wk:0,img:null},
+{n:"Lykke Li",g:"Indie Pop",day:"Fri",stage:"Gobi",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb6b3d7e1a9f2c4e8d0b5a7c3e"},
+{n:"Blood Orange",g:"R&B",day:"Fri",stage:"Gobi",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb4c8c9b0b8e13a3e2d5f8b4d2"},
+{n:"Blondshell",g:"Indie Rock",day:"Sat",stage:"Gobi",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb9f14cd13ac6e5a7e2d9bfe2f"},
+{n:"Dijon",g:"R&B",day:"Sun",stage:"Gobi",wk:0,img:null},
+{n:"Wednesday",g:"Indie Rock",day:"Sat",stage:"Gobi",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb2e8d7c3a1f0b9e4c6d2a8f5b"},
+{n:"Sombr",g:"Indie Pop",day:"Sat",stage:"Gobi",wk:0,img:null},
+{n:"Joyce Manor",g:"Punk",day:"Sun",stage:"Gobi",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb4eeb1d57aedc07e5cae9b43c"},
+{n:"CMAT",g:"Indie Pop",day:"Fri",stage:"Gobi",wk:0,img:null},
+{n:"Fleshwater",g:"Post-Punk",day:"Fri",stage:"Gobi",wk:0,img:null},
 {n:"NewDad",g:"Indie",day:"Fri",stage:"Gobi",wk:0,img:null},
 {n:"Oklou",g:"Electronic",day:"Fri",stage:"Gobi",wk:0,img:null},
+{n:"Moby",g:"Electronic",day:"Sat",stage:"Gobi",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb8e40c8aebaa98d5c72b7c481"},
+{n:"Holly Humberstone",g:"Indie Pop",day:"Sun",stage:"Gobi",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb3d2e8a1f7c0b4e9d6a5c2f1e"},
+{n:"Gigi Perez",g:"Indie Pop",day:"Sun",stage:"Gobi",wk:0,img:null},
+{n:"Febuary",g:"R&B",day:"Fri",stage:"Gobi",wk:0,img:null},
+{n:"Joost",g:"Pop",day:"Fri",stage:"Gobi",wk:0,img:null},
+{n:"Nine Inch Noize",g:"Industrial",day:"Fri",stage:"Sahara",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb7b91a30c5ddeb4e6fc1562db"},
+{n:"Disclosure",g:"Electronic",day:"Fri",stage:"Sahara",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb3bc5be7f05ce7cf5fb09b9b9"},
+{n:"PinkPantheress",g:"Electronic",day:"Sat",stage:"Sahara",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb4e2e9ad59cee27d17e6f1b5a"},
+{n:"Addison Rae",g:"Pop",day:"Sat",stage:"Sahara",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb8e8d84cf64fa4cb0c8c38e9e"},
+{n:"Central Cee",g:"UK Rap",day:"Fri",stage:"Sahara",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eba26bbb5d8ac0c5ef8726a9c7"},
+{n:"Major Lazer",g:"Electronic",day:"Sun",stage:"Sahara",wk:0,img:"https://i.scdn.co/image/ab6761610000e5ebf52ddc8acba8b9ed0fa41dd4"},
+{n:"Boys Noize",g:"Electronic",day:"Fri",stage:"Sahara",wk:0,img:"https://i.scdn.co/image/ab6761610000e5ebe7a4a4d71d9a3db2eaf7d8a3"},
+{n:"Subtronics",g:"Bass/EDM",day:"Sat",stage:"Sahara",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb17e2e5d4a82d94b6e3e5e9d4"},
+{n:"Armin van Buuren",g:"Trance",day:"Fri",stage:"Sahara",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb4c5c726be52d6bbda5fa84b6"},
+{n:"Swae Lee",g:"Hip-Hop",day:"Sun",stage:"Sahara",wk:0,img:null},
+{n:"Groove Armada",g:"Electronic",day:"Fri",stage:"Sahara",wk:0,img:null},
+{n:"Rezz",g:"Electronic",day:"Sat",stage:"Sahara",wk:0,img:null},
+{n:"Slayyyter",g:"Electronic",day:"Fri",stage:"Sahara",wk:0,img:null},
+{n:"BINI",g:"K-Pop",day:"Fri",stage:"Sonora",wk:0,img:null},
+{n:"Katseye",g:"K-Pop",day:"Fri",stage:"Sonora",wk:0,img:null},
+{n:"Noga Erez",g:"Electronic",day:"Sat",stage:"Sonora",wk:0,img:null},
+{n:"Lambrini Girls",g:"Punk",day:"Fri",stage:"Sonora",wk:0,img:null},
+{n:"Model/Actriz",g:"Post-Punk",day:"Sat",stage:"Sonora",wk:0,img:null},
+{n:"Hot Mulligan",g:"Punk",day:"Fri",stage:"Sonora",wk:0,img:null},
+{n:"DRAIN",g:"Punk/Metal",day:"Sun",stage:"Sonora",wk:0,img:null},
 {n:"Royal Otis",g:"Indie Pop",day:"Sat",stage:"Sonora",wk:0,img:null},
-{n:"The Rapture",g:"Dance-Punk",day:"Sun",stage:"Mojave",wk:0,img:null},
 {n:"Carolina Durante",g:"Indie Rock",day:"Fri",stage:"Sonora",wk:0,img:null},
+{n:"Los Retros",g:"Indie",day:"Sun",stage:"Sonora",wk:0,img:null},
+{n:"Los Hermanos Flores",g:"Latin",day:"Sat",stage:"Sonora",wk:0,img:null},
+{n:"Die Spitz",g:"Post-Punk",day:"Sun",stage:"Sonora",wk:0,img:null},
+{n:"rusowsky",g:"Indie Pop",day:"Sat",stage:"Sonora",wk:0,img:null},
+{n:"The Two Lips",g:"Pop",day:"Fri",stage:"Sonora",wk:0,img:null},
+{n:"Ecca Vandal",g:"Hip-Hop",day:"Sat",stage:"Sonora",wk:0,img:null},
+{n:"Jane Remover",g:"Indie",day:"Sun",stage:"Sonora",wk:0,img:null},
+{n:"Davido",g:"Afrobeats",day:"Sat",stage:"Sonora",wk:0,img:null},
+{n:"Taemin",g:"K-Pop",day:"Sat",stage:"Sonora",wk:0,img:null},
+{n:"Fujii Kaze",g:"J-Pop",day:"Sat",stage:"Sonora",wk:0,img:null},
+{n:"Duke Dumont",g:"House",day:"Sun",stage:"Sonora",wk:0,img:null},
+{n:"Solomun",g:"House",day:"Sat",stage:"Yuma",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb7bde0e3c41fa28c8cde9b07b"},
+{n:"Adriatique",g:"Electronic",day:"Fri",stage:"Yuma",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eb8d9e25a2e31de4b01fdb2e5a"},
+{n:"Green Velvet",g:"House",day:"Sat",stage:"Yuma",wk:0,img:"https://i.scdn.co/image/ab6761610000e5eba2c4a6cd7e8b4b234f4d90ce"},
+{n:"Carlita",g:"Electronic",day:"Sat",stage:"Yuma",wk:0,img:null},
+{n:"Chloé Caillet",g:"Electronic",day:"Fri",stage:"Yuma",wk:0,img:null},
+{n:"Ben Sterling",g:"Electronic",day:"Sat",stage:"Yuma",wk:0,img:null},
 {n:"Prospa",g:"Electronic",day:"Fri",stage:"Yuma",wk:0,img:null},
 {n:"Hamdi",g:"Electronic",day:"Fri",stage:"Yuma",wk:0,img:null},
-{n:"Ben Sterling",g:"Electronic",day:"Sat",stage:"Yuma",wk:0,img:null},
-{n:"Joost",g:"Pop",day:"Fri",stage:"Gobi",wk:0,img:null},
 {n:"Kettama",g:"Electronic",day:"Fri",stage:"Yuma",wk:0,img:null},
 {n:"HUGEL",g:"Electronic",day:"Fri",stage:"Yuma",wk:0,img:null},
 {n:"Ninajirachi",g:"Electronic",day:"Fri",stage:"Yuma",wk:0,img:null},
 {n:"54 Ultra",g:"Electronic",day:"Sat",stage:"Yuma",wk:0,img:null},
-{n:"Ecca Vandal",g:"Hip-Hop",day:"Sat",stage:"Sonora",wk:0,img:null},
 {n:"Gordo",g:"Electronic",day:"Fri",stage:"Yuma",wk:0,img:null},
 {n:"BUNT.",g:"Electronic",day:"Fri",stage:"Yuma",wk:0,img:null},
 {n:"Arodes",g:"Electronic",day:"Fri",stage:"Yuma",wk:0,img:null},
 {n:"Dabeull",g:"Electronic",day:"Fri",stage:"Yuma",wk:0,img:null},
 {n:"Sahar Z",g:"Electronic",day:"Fri",stage:"Yuma",wk:0,img:null},
-{n:"Die Spitz",g:"Post-Punk",day:"Sun",stage:"Sonora",wk:0,img:null},
-{n:"rusowsky",g:"Indie Pop",day:"Sat",stage:"Sonora",wk:0,img:null},
 {n:"AZZECCA",g:"Electronic",day:"Fri",stage:"Yuma",wk:0,img:null},
 {n:"Max Styler",g:"Electronic",day:"Fri",stage:"Yuma",wk:0,img:null},
-{n:"The Two Lips",g:"Pop",day:"Fri",stage:"Sonora",wk:0,img:null},
 {n:"Youna",g:"Electronic",day:"Fri",stage:"Yuma",wk:0,img:null},
 {n:"ZULAN",g:"Electronic",day:"Sat",stage:"Yuma",wk:0,img:null},
-{n:"Los Hermanos Flores",g:"Latin",day:"Sat",stage:"Sonora",wk:0,img:null},
-{n:"Febuary",g:"R&B",day:"Fri",stage:"Gobi",wk:0,img:null},
+{n:"Mochakk",g:"House",day:"Sun",stage:"Yuma",wk:0,img:null},
+{n:"Radiohead Kid A Mnesia (Exhibition)",g:"Art Pop",day:"Fri",stage:"Bunker",wk:0,img:null},
 // DO LAB WK1
 {n:"1TBSP",g:"Electronic",day:"Fri",stage:"Do LaB",wk:1,img:null},
 {n:"After Midnight (Matroda x San Pacho)",g:"Electronic",day:"Fri",stage:"Do LaB",wk:1,img:null},
@@ -341,13 +407,13 @@ const RAW=[
 {n:"X Club.",g:"Electronic",day:"Fri",stage:"Do LaB",wk:2,img:null},
 // QUASAR WK1
 {n:"Pawsa",g:"House",day:"Fri",stage:"Quasar",wk:1,img:null},
-{n:"David Guetta",g:"Electronic",day:"Sat",stage:"Quasar",wk:1,img:null},
-{n:"Fatboy Slim",g:"Electronic",day:"Sun",stage:"Quasar",wk:1,img:null},
+{n:"David Guetta",g:"Electronic",day:"Sat",stage:"Quasar",wk:1,img:"https://i.scdn.co/image/ab6761610000e5eb32a7b5e3c0b93b7c5d9e0b1f"},
+{n:"Fatboy Slim",g:"Electronic",day:"Sun",stage:"Quasar",wk:1,img:"https://i.scdn.co/image/ab6761610000e5eb5d4e2a8c1f0b3e7d9c6a4f2e"},
 // QUASAR WK2
 {n:"Armin van Buuren x Adam Beyer",g:"Trance",day:"Fri",stage:"Quasar",wk:2,img:null},
 {n:"DJ Snake's Pardon My French",g:"Electronic",day:"Sat",stage:"Quasar",wk:2,img:null},
 {n:"Sara Landry's Blood Oath",g:"Techno",day:"Sun",stage:"Quasar",wk:2,img:null},
-// HEINEKEN HOUSE
+// HEINEKEN HOUSE - both weekends
 {n:"Wale",g:"Hip-Hop",day:"Fri",stage:"Heineken House",wk:0,img:null},
 {n:"Robin Schulz",g:"Electronic",day:"Fri",stage:"Heineken House",wk:0,img:null},
 {n:"Zerb",g:"Electronic",day:"Fri",stage:"Heineken House",wk:0,img:null},
@@ -365,39 +431,72 @@ const RAW=[
 {n:"Less Than Jake",g:"Punk",day:"Sun",stage:"Heineken House",wk:0,img:null},
 {n:"Oskar Med K",g:"Electronic",day:"Sun",stage:"Heineken House",wk:0,img:null},
 {n:"Mild Minds",g:"Electronic",day:"Sun",stage:"Heineken House",wk:0,img:null},
-{n:"Radiohead Kid A Mnesia (Exhibition)",g:"Art Pop",day:"Fri",stage:"Bunker",wk:0,img:null},
 ];
 
 function dedup(arr){const s=new Set();return arr.filter(a=>{if(s.has(a.n))return false;s.add(a.n);return true;});}
 const ARTISTS=dedup(RAW);
 
+// STATE
 let curWK=1,sel=new Set(),activeStage="All",activeGenre="All";
 let eloR={},wins={},losses={},bQueue=[],bIdx=0,bDone=0,bTotal=0;
+let scores={},sortedArtists=[];
+let hasResults=false;
+// Calibration state
+let calibArtist=null,calibQueue=[],calibIdx=0,calibDone=0;
 
 function avail(a){return curWK===0||a.wk===0||a.wk===curWK;}
+function getA(n){return ARTISTS.find(a=>a.n===n);}
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
 
-function setWK(wk){
-  curWK=wk;
-  document.getElementById('wk1-btn').classList.toggle('active',wk===1);
-  document.getElementById('wk2-btn').classList.toggle('active',wk===2);
-  document.getElementById('wkb-btn').classList.toggle('active',wk===0);
-  const wc=WKC[wk];
-  const lbl=document.getElementById('wk-label');
-  lbl.textContent=wc.text;lbl.style.color=wc.label;
-  const b=document.getElementById('wk-banner-el');
-  b.style.background=wc.banner;b.style.borderColor=wc.border;
-  sel.clear();document.getElementById('sel-count').textContent='0';
-  document.getElementById('start-btn').disabled=true;
-  activeStage="All";activeGenre="All";buildFilters();doFilter();
+// STORAGE
+function saveState(){
+  try{
+    const data={
+      curWK,sel:Array.from(sel),eloR,wins,losses,
+      scores,hasResults,
+      savedAt:new Date().toISOString()
+    };
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
+    const t=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    const el=document.getElementById('save-time');
+    if(el)el.textContent='Rankings auto-saved at '+t;
+  }catch(e){}
 }
 
+function loadState(){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);
+    if(!raw)return false;
+    const data=JSON.parse(raw);
+    curWK=data.curWK||1;
+    sel=new Set(data.sel||[]);
+    eloR=data.eloR||{};
+    wins=data.wins||{};
+    losses=data.losses||{};
+    scores=data.scores||{};
+    hasResults=data.hasResults||false;
+    return data;
+  }catch(e){return false;}
+}
+
+// WEEKEND
+const WKC_={1:{banner:"#3D1E0A",border:"#E8733A",label:"#E8733A",text:"Weekend 1 (Apr 10–12)"},2:{banner:"#2A0E1C",border:"#C46080",label:"#E080A0",text:"Weekend 2 (Apr 17–19)"},0:{banner:"#1C1A08",border:"#D4A843",label:"#F0C865",text:"Both Weekends"}};
+function setWK(wk){
+  curWK=wk;
+  ['wk1-btn','wk2-btn','wkb-btn'].forEach((id,i)=>document.getElementById(id).classList.toggle('active',[1,2,0][i]===wk));
+  const wc=WKC_[wk];
+  const lbl=document.getElementById('wk-label');lbl.textContent=wc.text;lbl.style.color=wc.label;
+  const b=document.getElementById('wk-banner-el');b.style.background=wc.banner;b.style.borderColor=wc.border;
+  activeStage="All";activeGenre="All";buildFilters();doFilter();saveState();
+}
+
+// FILTERS
 function uStages(){const s=new Set();ARTISTS.filter(avail).forEach(a=>s.add(a.stage));return["All",...Array.from(s).sort()];}
 function uGenres(){const g=new Set();ARTISTS.filter(avail).forEach(a=>a.g.split('/').forEach(p=>g.add(p.trim())));return["All",...Array.from(g).sort()];}
-
 function buildFilters(){
   document.getElementById('stage-filters').innerHTML=uStages().map(s=>{
     const c=SC[s]||'#666',act=s===activeStage;
-    return`<button class="fb${act?' active':''}" style="${act?`background:${c}33;border-color:${c};color:${c}`:''}" onclick="setSt('${s.replace(/'/g,"\\'")}')"> ${s.replace(' Stage','').replace(' House','')}</button>`;
+    return`<button class="fb${act?' active':''}" style="${act?`background:${c}33;border-color:${c};color:${c}`:''}" onclick="setSt('${s.replace(/'/g,"\\'")}')">${s.replace(' Stage','').replace(' House','')}</button>`;
   }).join('');
   document.getElementById('genre-filters').innerHTML=uGenres().map(g=>`<button class="fb${g===activeGenre?' active':''}" onclick="setGn('${g.replace(/'/g,"\\'")}')">${g}</button>`).join('');
 }
@@ -409,35 +508,138 @@ function doFilter(){
   const vis=ARTISTS.filter(a=>avail(a)&&(!q||a.n.toLowerCase().includes(q))&&(activeStage==="All"||a.stage===activeStage)&&(activeGenre==="All"||a.g.includes(activeGenre)));
   document.getElementById('artist-grid').innerHTML=vis.map(a=>{
     const g=gs(a.g),sc=SC[a.stage]||'#666',isSel=sel.has(a.n);
-    return`<div class="acard${isSel?' sel':''}" onclick="tog('${a.n.replace(/'/g,"\\'").replace(/"/g,"&quot;")}')"><div class="aname">${a.n}</div><div class="apills"><span class="gpill" style="background:${g.p}22;color:${g.t};border:1px solid ${g.p}44">${a.g.split('/')[0]}</span><span class="spill" style="border-color:${sc}55;color:${sc}">${a.stage.replace(' Stage','').replace(' House','')}</span></div></div>`;
+    const sn=a.n.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;');
+    return`<div class="acard${isSel?' sel':''}" onclick="tog('${sn}')"><div class="aname">${a.n}</div><div class="apills"><span class="gpill" style="background:${g.p}22;color:${g.t};border:1px solid ${g.p}44">${a.g.split('/')[0]}</span><span class="spill" style="border-color:${SC[a.stage]||'#666'}55;color:${SC[a.stage]||'#666'}">${a.stage.replace(' Stage','').replace(' House','')}</span></div></div>`;
   }).join('');
 }
 
-function tog(n){sel.has(n)?sel.delete(n):sel.add(n);document.getElementById('sel-count').textContent=sel.size;document.getElementById('start-btn').disabled=sel.size<5;doFilter();}
+function tog(n){
+  if(sel.has(n)){
+    // If results exist, remove and recalculate
+    if(hasResults){removeArtist(n);return;}
+    sel.delete(n);
+  } else {
+    // If results exist, add and calibrate
+    if(hasResults){addAndCalibrate(n);return;}
+    sel.add(n);
+  }
+  document.getElementById('sel-count').textContent=sel.size;
+  document.getElementById('start-btn').disabled=sel.size<5;
+  doFilter();saveState();
+}
+
 function selAll(){
   const q=(document.getElementById('search-input').value||'').toLowerCase();
   ARTISTS.filter(a=>avail(a)&&(!q||a.n.toLowerCase().includes(q))&&(activeStage==="All"||a.stage===activeStage)&&(activeGenre==="All"||a.g.includes(activeGenre))).forEach(a=>sel.add(a.n));
-  document.getElementById('sel-count').textContent=sel.size;document.getElementById('start-btn').disabled=sel.size<5;doFilter();
+  document.getElementById('sel-count').textContent=sel.size;document.getElementById('start-btn').disabled=sel.size<5;doFilter();saveState();
 }
-function clearAll(){sel.clear();document.getElementById('sel-count').textContent='0';document.getElementById('start-btn').disabled=true;doFilter();}
-function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+function clearSel(){
+  if(hasResults){confirmReset();return;}
+  sel.clear();document.getElementById('sel-count').textContent='0';document.getElementById('start-btn').disabled=true;doFilter();
+}
 
+// REMOVE ARTIST (post-results)
+function removeArtist(name){
+  sel.delete(name);
+  delete eloR[name];delete wins[name];delete losses[name];delete scores[name];
+  sortedArtists=sortedArtists.filter(a=>a.n!==name);
+  recalcScores();
+  doFilter();
+  document.getElementById('sel-count').textContent=sel.size;
+  buildResults(sortedArtists,scores);buildSchedule(sortedArtists,scores);
+  saveState();
+}
+
+// ADD AND CALIBRATE
+function addAndCalibrate(name){
+  sel.add(name);
+  const art=getA(name);
+  if(!art){doFilter();return;}
+  // Give starting Elo at median of current pool
+  const eloVals=Object.values(eloR);
+  const medianElo=eloVals.length?eloVals.sort((a,b)=>a-b)[Math.floor(eloVals.length/2)]:1500;
+  eloR[name]=medianElo;wins[name]=0;losses[name]=0;
+  // Pick 5 calibration opponents: spread across tiers
+  const pool=sortedArtists.filter(a=>sel.has(a.n)&&a.n!==name);
+  const calibOpponents=[];
+  if(pool.length>=5){
+    const step=Math.floor(pool.length/5);
+    for(let i=0;i<5;i++)calibOpponents.push(pool[Math.min(i*step,pool.length-1)]);
+  } else {
+    calibOpponents.push(...pool);
+  }
+  calibArtist=art;calibQueue=calibOpponents;calibIdx=0;calibDone=0;
+  document.getElementById('sel-count').textContent=sel.size;
+  doFilter();
+  // Switch to results tab and show calibration UI
+  document.getElementById('tab-results').disabled=false;
+  goTab('results');
+  document.getElementById('calib-section').style.display='block';
+  renderCalib();saveState();
+}
+
+function renderCalib(){
+  if(calibIdx>=calibQueue.length){finishCalib();return;}
+  const opp=calibQueue[calibIdx];
+  document.getElementById('calib-text').textContent=`Matchup ${calibIdx+1} of ${calibQueue.length} — calibrating ${calibArtist.n}`;
+  const pairs=[calibArtist,opp];
+  document.getElementById('calib-cards').innerHTML=pairs.map((art,idx)=>{
+    const g=gs(art.g),sc=SC[art.stage]||'#666',init=art.n.split(' ').map(w=>w[0]).join('').slice(0,3);
+    const imgH=art.img?`<img class="bcimg" src="${art.img}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt=""><div class="bcph" style="display:none;background:${g.bg};color:${g.t}">${init}</div>`:`<div class="bcph" style="background:${g.bg};color:${g.t}">${init}</div>`;
+    return`<div class="bcard" onclick="pickCalib(${idx})">${imgH}<div class="bci"><div class="bcname">${art.n}</div><div style="display:flex;gap:4px;flex-wrap:wrap"><span class="gpill" style="background:${g.p}22;color:${g.t};border:1px solid ${g.p}44">${art.g.split('/')[0]}</span><span class="spill" style="border-color:${sc}55;color:${sc}">${art.stage.replace(' Stage','').replace(' House','')}</span></div></div></div>`;
+  }).join('');
+}
+
+function pickCalib(idx){
+  const opp=calibQueue[calibIdx];
+  const winner=idx===0?calibArtist.n:opp.n;
+  const loser=idx===0?opp.n:calibArtist.n;
+  eloUp(winner,loser);
+  calibIdx++;calibDone++;
+  renderCalib();
+}
+function skipCalib(){calibIdx++;renderCalib();}
+
+function finishCalib(){
+  document.getElementById('calib-section').style.display='none';
+  calibArtist=null;calibQueue=[];calibIdx=0;calibDone=0;
+  // Add new artist and recalc
+  const list=ARTISTS.filter(a=>sel.has(a.n));
+  recalcScores();
+  buildResults(sortedArtists,scores);buildSchedule(sortedArtists,scores);
+  saveState();
+}
+
+function recalcScores(){
+  const list=ARTISTS.filter(a=>sel.has(a.n));
+  const eloVals=list.map(a=>eloR[a.n]||1500);
+  const mx=Math.max(...eloVals),mn=Math.min(...eloVals),rng=mx-mn||1;
+  scores={};
+  list.forEach(a=>{
+    const eN=((eloR[a.n]||1500)-mn)/rng;
+    const tot=(wins[a.n]||0)+(losses[a.n]||0);
+    const wr=tot>0?(wins[a.n]||0)/tot:0.5;
+    scores[a.n]=(eN*0.7+wr*0.3)*9+1;
+  });
+  sortedArtists=[...list].sort((a,b)=>scores[b.n]-scores[a.n]);
+}
+
+// BATTLE ENGINE
 function genQueue(list){
   const rounds=Math.max(4,Math.ceil(Math.log2(list.length))+3),pairs=[];
   for(let r=0;r<rounds;r++){const s=shuffle([...list]);for(let i=0;i<s.length-1;i+=2)pairs.push([s[i].n,s[i+1].n]);}
   return pairs.slice(0,Math.ceil(list.length*2.2));
 }
-
 function startBattle(){
   const list=ARTISTS.filter(a=>sel.has(a.n));
-  eloR={};wins={};losses={};
+  eloR={};wins={};losses={};hasResults=false;
   list.forEach(a=>{eloR[a.n]=1500;wins[a.n]=0;losses[a.n]=0;});
   bQueue=genQueue(list);bIdx=0;bDone=0;bTotal=bQueue.length;
   document.getElementById('tab-battle').disabled=false;
+  document.getElementById('battle-mode-label').textContent='WHO WOULD YOU RATHER SEE?';
+  document.getElementById('battle-sub').style.display='none';
   goTab('battle');renderBattle();
 }
-
-function getA(n){return ARTISTS.find(a=>a.n===n);}
 
 function renderBattle(){
   if(bIdx>=bQueue.length){finishBattle();return;}
@@ -452,22 +654,26 @@ function renderBattle(){
   }).join('');
 }
 
-function eloUp(w,l){const K=40,rW=eloR[w],rL=eloR[l],e=1/(1+Math.pow(10,(rL-rW)/400));eloR[w]=rW+K*(1-e);eloR[l]=rL+K*(0-(1-e));wins[w]++;losses[l]++;}
+function eloUp(w,l){
+  if(!eloR[w])eloR[w]=1500;if(!eloR[l])eloR[l]=1500;
+  if(!wins[w])wins[w]=0;if(!losses[l])losses[l]=0;
+  const K=40,rW=eloR[w],rL=eloR[l],e=1/(1+Math.pow(10,(rL-rW)/400));
+  eloR[w]=rW+K*(1-e);eloR[l]=rL+K*(0-(1-e));wins[w]++;losses[l]++;
+}
 function pick(idx){const[nA,nB]=bQueue[bIdx];eloUp(idx===0?nA:nB,idx===0?nB:nA);bDone++;bIdx++;renderBattle();}
 function skip(){bIdx++;renderBattle();}
 function earlyFinish(){if(bDone>0)finishBattle();}
 
 function finishBattle(){
-  const list=ARTISTS.filter(a=>sel.has(a.n));
-  const eloVals=list.map(a=>eloR[a.n]),mx=Math.max(...eloVals),mn=Math.min(...eloVals),rng=mx-mn||1;
-  const scores={};
-  list.forEach(a=>{const eN=(eloR[a.n]-mn)/rng,tot=(wins[a.n]||0)+(losses[a.n]||0),wr=tot>0?(wins[a.n]||0)/tot:0.5;scores[a.n]=(eN*0.7+wr*0.3)*9+1;});
-  const sorted=[...list].sort((a,b)=>scores[b.n]-scores[a.n]);
+  hasResults=true;
+  recalcScores();
   document.getElementById('tab-results').disabled=false;
   document.getElementById('tab-schedule').disabled=false;
-  buildResults(sorted,scores);buildSchedule(sorted,scores);goTab('results');
+  buildResults(sortedArtists,scores);buildSchedule(sortedArtists,scores);
+  saveState();goTab('results');
 }
 
+// SCORING
 function tier(s){
   if(s>=7.5)return{lbl:"Tier 1",c:"#4A8C5C",l:"#6AB87A"};
   if(s>=5.0)return{lbl:"Tier 2",c:"#D4A843",l:"#F0C865"};
@@ -475,6 +681,7 @@ function tier(s){
   return{lbl:"Lower",c:"#606060",l:"#909090"};
 }
 
+// CHARTS
 function drawPie(cid,data,lid){
   const cv=document.getElementById(cid);if(!cv)return;
   const ctx=cv.getContext('2d'),cx=80,cy=80,r=68,tot=data.reduce((s,d)=>s+d.w,0);
@@ -484,64 +691,81 @@ function drawPie(cid,data,lid){
     const sl=(d.w/tot)*Math.PI*2;
     ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,ang,ang+sl);ctx.closePath();ctx.fillStyle=d.c;ctx.fill();
     ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,ang,ang+sl);ctx.closePath();ctx.strokeStyle='#1A1410';ctx.lineWidth=2;ctx.stroke();
-    if(sl>0.22){const m=ang+sl/2;ctx.fillStyle='rgba(0,0,0,0.75)';ctx.font='bold 8px DM Sans';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(d.lbl.slice(0,8),cx+Math.cos(m)*r*0.62,cy+Math.sin(m)*r*0.62);}
+    if(sl>0.22){const m=ang+sl/2;ctx.fillStyle='rgba(0,0,0,0.8)';ctx.font='bold 8px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(d.lbl.slice(0,9),cx+Math.cos(m)*r*0.62,cy+Math.sin(m)*r*0.62);}
     ang+=sl;
   });
-  document.getElementById(lid).innerHTML=data.slice(0,8).map(d=>`<div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted)"><div style="width:8px;height:8px;border-radius:2px;background:${d.c};flex-shrink:0"></div><span>${d.lbl}</span><span style="margin-left:auto;color:var(--text)">${d.avg.toFixed(1)}</span></div>`).join('');
+  document.getElementById(lid).innerHTML=data.slice(0,8).map(d=>`<div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted)"><div style="width:8px;height:8px;border-radius:2px;background:${d.c};flex-shrink:0"></div><span style="flex:1">${d.lbl}</span><span style="color:var(--text)">${d.avg.toFixed(1)}</span></div>`).join('');
 }
 
-function buildResults(sorted,scores){
+// RESULTS
+function buildResults(sorted,sc){
   const gMap={},sMap={};
   sorted.forEach((a,i)=>{
     const gk=a.g.split('/')[0];
     if(!gMap[gk])gMap[gk]={w:0,tot:0,n:0,c:PIE[Object.keys(gMap).length%PIE.length]};
-    gMap[gk].w+=scores[a.n];gMap[gk].tot+=scores[a.n];gMap[gk].n++;
+    gMap[gk].w+=sc[a.n];gMap[gk].tot+=sc[a.n];gMap[gk].n++;
     const sk=a.stage.replace(' Stage','').replace(' House','');
     if(!sMap[sk])sMap[sk]={w:0,tot:0,n:0,c:SC[a.stage]||'#666'};
-    sMap[sk].w+=scores[a.n];sMap[sk].tot+=scores[a.n];sMap[sk].n++;
+    sMap[sk].w+=sc[a.n];sMap[sk].tot+=sc[a.n];sMap[sk].n++;
   });
   const gd=Object.entries(gMap).map(([k,v])=>({lbl:k,w:v.w,avg:v.tot/v.n,c:v.c})).sort((a,b)=>b.w-a.w);
   const sd=Object.entries(sMap).map(([k,v])=>({lbl:k,w:v.w,avg:v.tot/v.n,c:v.c})).sort((a,b)=>b.w-a.w);
   drawPie('genre-chart',gd,'genre-legend');
   drawPie('stage-chart',sd,'stage-legend');
-  buildFacts(sorted,scores,gd,sd);
+  buildFacts(sorted,sc,gd,sd);
   let lastT="";
   document.getElementById('rlist').innerHTML=sorted.map((a,i)=>{
-    const sc=scores[a.n],t=tier(sc),g=gs(a.g),tot=(wins[a.n]||0)+(losses[a.n]||0),wr=tot>0?Math.round((wins[a.n]||0)/tot*100):50;
+    const s=sc[a.n],t=tier(s),g=gs(a.g),tot=(wins[a.n]||0)+(losses[a.n]||0),wr=tot>0?Math.round((wins[a.n]||0)/tot*100):50;
     let div="";
     if(t.lbl!==lastT){div=`<div class="tdiv">${t.lbl} <span class="tbadge" style="background:${t.c}22;color:${t.l};border:1px solid ${t.c}44">${t.lbl}</span></div>`;lastT=t.lbl;}
     const init=a.n.split(' ').map(w=>w[0]).join('').slice(0,2);
     const imgH=a.img?`<img class="rimg" src="${a.img}" onerror="this.outerHTML='<div class=rph style=background:${g.bg};color:${g.t}>${init}</div>'" alt="">`:`<div class="rph" style="background:${g.bg};color:${g.t}">${init}</div>`;
-    return`${div}<div class="rrow"><div class="rrank">${i+1}</div>${imgH}<div class="rinfo"><div class="rname">${a.n}</div><div class="rmeta">${a.g} · ${a.day} · ${a.stage.replace(' Stage','')} · ${wr}% win rate</div></div><div class="rbarbg"><div class="rbarfill" style="width:${(sc/10*100).toFixed(1)}%;background:${t.c}"></div></div><div class="rscore" style="color:${t.l}">${sc.toFixed(1)}</div></div>`;
+    const sn=a.n.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    return`${div}<div class="rrow"><div class="rrank">${i+1}</div>${imgH}<div class="rinfo"><div class="rname">${a.n}</div><div class="rmeta">${a.g} · ${a.day} · ${a.stage.replace(' Stage','')} · ${wr}% win rate</div></div><div class="rbarbg"><div class="rbarfill" style="width:${(s/10*100).toFixed(1)}%;background:${t.c}"></div></div><div class="rscore" style="color:${t.l}">${s.toFixed(1)}</div><div class="ractions"><button class="raction remove" onclick="removeArtist('${sn}')">Remove</button></div></div>`;
   }).join('');
 }
 
-function buildFacts(sorted,scores,gd,sd){
+function buildFacts(sorted,sc,gd,sd){
   const facts=[];
-  if(gd.length)facts.push({t:`Your highest-ranked genre is <strong>${gd[0].lbl}</strong>, averaging ${gd[0].avg.toFixed(1)}/10 across your picks.`,s:`${gd[0].lbl} artists hold the largest weighted share of your interest.`});
+  if(gd.length)facts.push({t:`Your highest-ranked genre is <strong>${gd[0].lbl}</strong>, averaging ${gd[0].avg.toFixed(1)}/10 across your picks.`,s:`${gd[0].lbl} holds the largest weighted share of your festival interest.`});
   const heads=["Sabrina Carpenter","Justin Bieber","Karol G","Anyma (Æden)"];
   const hl=sorted.filter(a=>heads.includes(a.n));
   if(hl.length){const h=hl[0],rank=sorted.indexOf(h)+1;
     if(rank>sorted.length*0.5)facts.push({t:`<strong>${h.n}</strong> is a headliner ranked #${rank} of ${sorted.length} — a genuine outlier vs. their top billing.`,s:`You're not going for the headliner. That's a vibe.`});
-    else facts.push({t:`<strong>${h.n}</strong> is your top headliner pick at #${rank} of ${sorted.length}.`,s:`Aligns with their billing on the poster.`});
+    else facts.push({t:`<strong>${h.n}</strong> is your top headliner pick at #${rank} of ${sorted.length}.`,s:`Aligns with their festival billing.`});
   }
   const dc={Fri:0,Sat:0,Sun:0};
-  sorted.slice(0,Math.ceil(sorted.length/3)).forEach(a=>dc[a.day]++);
+  sorted.slice(0,Math.ceil(sorted.length/3)).forEach(a=>dc[a.day]=(dc[a.day]||0)+1);
   const td=Object.entries(dc).sort((a,b)=>b[1]-a[1])[0];
-  if(td){const dn={Fri:"Friday",Sat:"Saturday",Sun:"Sunday"};facts.push({t:`Your top third skews toward <strong>${dn[td[0]]}</strong> (${td[1]} of your top picks).`,s:`Lighter conflict pressure on the other days.`});}
-  if(sd.length>=3)facts.push({t:`Your picks span <strong>${sd.length} stages</strong>, led by ${sd[0].lbl} (avg ${sd[0].avg.toFixed(1)}) and ${sd[1].lbl} (avg ${sd[1].avg.toFixed(1)}).`,s:`More stages = more walking, but fewer schedule conflicts.`});
+  if(td){const dn={Fri:"Friday",Sat:"Saturday",Sun:"Sunday"};facts.push({t:`Your top third skews toward <strong>${dn[td[0]]}</strong> (${td[1]} of your top picks).`,s:`Lighter conflict pressure on the other days — good news for schedule planning.`});}
+  if(sd.length>=3)facts.push({t:`Your picks span <strong>${sd.length} stages</strong>, led by ${sd[0].lbl} (avg ${sd[0].avg.toFixed(1)}) and ${sd[1].lbl} (avg ${sd[1].avg.toFixed(1)}).`,s:`More stages = more walking, but fewer head-to-head scheduling conflicts.`});
   const bigSt=["Coachella Stage","Outdoor Theatre","Sahara"];
-  const outlier=sorted.slice(-3).find(a=>bigSt.includes(a.stage));
-  if(outlier)facts.push({t:`<strong>${outlier.n}</strong> plays ${outlier.stage} but lands near the bottom of your rankings.`,s:`Possible guilt-free skip in favour of a smaller-stage pick.`});
+  const outlier=sorted.slice(-Math.ceil(sorted.length*0.2)).find(a=>bigSt.includes(a.stage));
+  if(outlier)facts.push({t:`<strong>${outlier.n}</strong> plays ${outlier.stage} but lands in your bottom 20%.`,s:`Possible guilt-free skip — use that slot for something you actually ranked higher.`});
   document.getElementById('fun-facts').innerHTML=facts.map(f=>`<div class="fact-card"><div class="fact-text">${f.t}</div><div class="fact-sub">${f.s}</div></div>`).join('');
 }
 
-function buildSchedule(sorted,scores){
+function buildSchedule(sorted,sc){
   document.getElementById('sch-leg').innerHTML=[{l:"Tier 1 (7.5–10.0)",c:"#4A8C5C"},{l:"Tier 2 (5.0–7.4)",c:"#D4A843"},{l:"Tier 3 (3.0–4.9)",c:"#C4561A"},{l:"Unranked",c:"#404040"}].map(t=>`<div class="legi"><div class="legd" style="background:${t.c}"></div>${t.l}</div>`).join('');
-  document.getElementById('mock-sch').innerHTML=`<div style="font-size:11px;color:var(--muted);margin:12px 0 4px;text-align:left">Preview — your ranked artists by day:</div>`+["Friday","Saturday","Sunday"].map(day=>{
-    const da=sorted.filter(a=>a.day===day.slice(0,3)).slice(0,12);
-    return da.length?`<div class="mday">${day}</div><div class="mslots">${da.map(a=>{const s=scores[a.n],t=tier(s);return`<div class="mslot" style="background:${t.c}22;border-color:${t.c}44;color:${t.l}">${a.n}</div>`;}).join('')}</div>`:'';
+  document.getElementById('mock-sch').innerHTML=`<div style="font-size:11px;color:var(--muted);margin:12px 0 4px;text-align:left">Preview — your ranked artists by day (full grid populates when set times drop):</div>`+["Friday","Saturday","Sunday"].map(day=>{
+    const da=sorted.filter(a=>a.day===day.slice(0,3)).slice(0,14);
+    return da.length?`<div class="mday">${day}</div><div class="mslots">${da.map(a=>{const s=sc[a.n],t=tier(s);return`<div class="mslot" style="background:${t.c}22;border-color:${t.c}44;color:${t.l}">${a.n}</div>`;}).join('')}</div>`:'';
   }).join('');
+}
+
+// RESET
+function confirmReset(){document.getElementById('reset-modal').style.display='flex';}
+function closeModal(){document.getElementById('reset-modal').style.display='none';}
+function doReset(){
+  closeModal();
+  eloR={};wins={};losses={};scores={};sortedArtists=[];hasResults=false;
+  bQueue=[];bIdx=0;bDone=0;bTotal=0;
+  document.getElementById('tab-battle').disabled=true;
+  document.getElementById('tab-results').disabled=true;
+  document.getElementById('tab-schedule').disabled=true;
+  document.getElementById('calib-section').style.display='none';
+  localStorage.removeItem(STORAGE_KEY);
+  goTab('lineup');doFilter();
 }
 
 function goTab(t){
@@ -551,11 +775,43 @@ function goTab(t){
   document.getElementById('tab-'+t).classList.add('active');
 }
 
-const wc=WKC[1];
-document.getElementById('wk-label').style.color=wc.label;
-document.getElementById('wk-banner-el').style.background=wc.banner;
-document.getElementById('wk-banner-el').style.borderColor=wc.border;
-buildFilters();doFilter();
+// INIT
+function init(){
+  // Apply wk1 banner color
+  const wc=WKC_[1];
+  document.getElementById('wk-label').style.color=wc.label;
+  document.getElementById('wk-banner-el').style.background=wc.banner;
+  document.getElementById('wk-banner-el').style.borderColor=wc.border;
+
+  // Try to restore saved session
+  const saved=loadState();
+  if(saved&&saved.hasResults){
+    // Apply saved weekend toggle
+    ['wk1-btn','wk2-btn','wkb-btn'].forEach((id,i)=>document.getElementById(id).classList.toggle('active',[1,2,0][i]===curWK));
+    const wc2=WKC_[curWK];
+    document.getElementById('wk-label').textContent=wc2.text;
+    document.getElementById('wk-label').style.color=wc2.label;
+    document.getElementById('wk-banner-el').style.background=wc2.banner;
+    document.getElementById('wk-banner-el').style.borderColor=wc2.border;
+    // Show restore banner
+    const rb=document.getElementById('restore-banner');
+    rb.style.display='flex';
+    const selList=Array.from(sel);
+    document.getElementById('restore-info').textContent=`${selList.length} artists ranked · saved ${saved.savedAt?new Date(saved.savedAt).toLocaleDateString():'recently'}`;
+    // Re-enable tabs
+    document.getElementById('tab-results').disabled=false;
+    document.getElementById('tab-schedule').disabled=false;
+    // Rebuild results from saved scores
+    recalcScores();
+    buildResults(sortedArtists,scores);
+    buildSchedule(sortedArtists,scores);
+  }
+  document.getElementById('sel-count').textContent=sel.size;
+  document.getElementById('start-btn').disabled=sel.size<5;
+  buildFilters();doFilter();
+}
+
+init();
 </script>
 </body>
 </html>
