@@ -210,15 +210,38 @@ html,body{background:var(--night);min-height:100%;overflow-x:hidden}
 .calib-text{font-size:12px;color:var(--muted);margin-bottom:11px}
 
 /* ── SCHEDULE ── */
-.schbox{background:rgba(16,12,8,.8);border:1px dashed rgba(74,58,38,.5);border-radius:13px;padding:32px 18px;text-align:center;backdrop-filter:blur(6px)}
-.scht{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--gold-l);margin-bottom:8px;text-shadow:0 0 16px rgba(212,168,67,.35)}
-.schtxt{font-size:12px;color:var(--muted);line-height:1.7}
-.leg{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;justify-content:center}
-.legi{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
-.legd{width:10px;height:10px;border-radius:3px;flex-shrink:0}
-.mday{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1.5px;color:var(--gold);margin:13px 0 5px;text-align:left;text-shadow:0 0 12px rgba(212,168,67,.25)}
-.mslots{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:7px}
-.mslot{padding:4px 10px;border-radius:5px;font-size:10px;font-weight:500;border:1px solid transparent;box-shadow:0 2px 6px rgba(0,0,0,.35);backdrop-filter:blur(3px)}
+/* ── SCHEDULE GRID ── */
+.sch-outer{padding:0 2px}
+.sch-day-header{
+  font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:4px;
+  text-align:center;padding:14px 0 10px;
+  color:var(--gold-l);text-shadow:0 0 20px rgba(212,168,67,.4);
+  border-bottom:1px solid rgba(212,168,67,.2);margin-bottom:14px;
+}
+.sch-day-sub{font-size:11px;color:var(--muted);letter-spacing:2px;display:block;margin-top:2px;font-family:'DM Sans',sans-serif;font-weight:500}
+.sch-grid{
+  display:grid;gap:8px;
+  overflow-x:auto;padding-bottom:6px;
+}
+.sch-col{min-width:105px}
+.sch-stage-hdr{
+  font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:2px;
+  text-align:center;padding:6px 4px 5px;border-radius:5px 5px 0 0;
+  margin-bottom:4px;border-bottom:2px solid;
+}
+.sch-slot{
+  border-radius:4px;padding:5px 7px;margin-bottom:3px;cursor:default;
+  border-left:2px solid transparent;transition:transform .15s;
+  backdrop-filter:blur(3px);
+}
+.sch-slot:hover{transform:translateX(2px)}
+.sch-time{font-size:8px;color:rgba(255,255,255,.5);letter-spacing:.5px;margin-bottom:1px;font-weight:600}
+.sch-name{font-size:10px;font-weight:600;line-height:1.25;letter-spacing:.2px}
+.sch-legend{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-bottom:16px}
+.sch-leg-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted)}
+.sch-leg-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.sch-day-wrap{margin-bottom:28px}
+.sch-note{font-size:10px;color:var(--muted);text-align:center;margin-top:8px;font-style:italic}
 
 /* ── MODAL ── */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px)}
@@ -508,7 +531,7 @@ html,body{background:var(--night);min-height:100%;overflow-x:hidden}
   <button class="tab active" onclick="goTab('lineup')" id="tab-lineup">1 · Lineup</button>
   <button class="tab" onclick="goTab('battle')" id="tab-battle" disabled>2 · Battle</button>
   <button class="tab" onclick="goTab('results')" id="tab-results" disabled>3 · Rankings</button>
-  <button class="tab" onclick="goTab('schedule')" id="tab-schedule" disabled>4 · Schedule</button>
+  <button class="tab" onclick="goTab('schedule')" id="tab-schedule">4 · Schedule</button>
 </div>
 
 <!-- ═══ LINEUP ═══ -->
@@ -610,11 +633,8 @@ html,body{background:var(--night);min-height:100%;overflow-x:hidden}
 
 <!-- ═══ SCHEDULE ═══ -->
 <div class="panel" id="panel-schedule">
-  <div class="schbox">
-    <div class="scht">Set Times Coming Soon</div>
-    <div class="schtxt">Coachella drops set times ~4 days before Weekend 1.<br>Your tier overlay applies to the full grid when they release.</div>
-    <div class="leg" id="sch-leg"></div>
-    <div id="mock-sch"></div>
+  <div class="sch-outer" id="sch-root">
+    <!-- Built by buildScheduleGrid() in JS -->
   </div>
 </div>
 
@@ -636,59 +656,94 @@ function gs(g){const b=g?g.split('/')[0].trim():'';return GC[g]||GC[b]||{bg:"#18
 const WKC={1:{banner:"rgba(61,30,10,.9)",border:"#E8733A",label:"#F09050",text:"Weekend 1 (Apr 10–12)"},2:{banner:"rgba(42,14,28,.9)",border:"#C46080",label:"#E090B0",text:"Weekend 2 (Apr 17–19)"},0:{banner:"rgba(28,26,8,.9)",border:"#D4A843",label:"#F0C865",text:"Both Weekends"}};
 const PIE=['#C4561A','#4A90C4','#7B5EA7','#4A8C5C','#D4A843','#C46080','#5C8A4A','#6080C4','#8C4AAC','#2E7D32','#1A6080','#805030','#A04050','#308080'];
 
-// ── ARTIST IMAGE MAP ──────────────────────────────────────────────────────
-// Images use the wsrv.nl image proxy to bypass CORS restrictions on Spotify CDN
-// Format: https://wsrv.nl/?url=<encoded_original_url>&w=400&h=400&fit=cover
-function scdn(id){return`https://wsrv.nl/?url=https%3A%2F%2Fi.scdn.co%2Fimage%2F${id}&w=400&h=400&fit=cover`;}
-const IMGS={
-  "Sabrina Carpenter":scdn("ab6761610000e5eb416b1c49c0e1a60b2bce1490"),
-  "Justin Bieber":scdn("ab6761610000e5eb8ae7f2aaa9817a704a87ea36"),
-  "Karol G":scdn("ab6761610000e5eb19fc5c9a8be3c8ff11f0a897"),
-  "Anyma (Æden)":scdn("ab6761610000e5eb3e4fc0e39d56b0c3a92b1614"),
-  "Kaskade":scdn("ab6761610000e5eb3eb1b3b45bc8d6f56e3b49d7"),
-  "The xx":scdn("ab6761610000e5eb55d39209a5b7c369afcfabd6"),
-  "The Strokes":scdn("ab6761610000e5eb5edc1c57ea8ebb3cc9ec24b2"),
-  "BIGBANG":scdn("ab6761610000e5eb67e84b4b4cbf24c7ae7d14a3"),
-  "Young Thug":scdn("ab6761610000e5eb36ee5fd12a49c26aa47df4e1"),
-  "Laufey":scdn("ab6761610000e5ebfd47f900feaca96d5ee1abc9"),
-  "FKA Twigs":scdn("ab6761610000e5eb9e1c36d83c6c1bb30c5e6abe"),
-  "Ethel Cain":scdn("ab6761610000e5eb56e3baa37c4a60ac87d826ef"),
-  "Alex G":scdn("ab6761610000e5eb1b92e5b45d89a62b25de7e2e"),
-  "Iggy Pop":scdn("ab6761610000e5eb4d9ede5a7aaeb7f1c6c03d30"),
-  "Clipse":scdn("ab6761610000e5ebc19e2a2ab06aba37ee6c67f7"),
-  "Teddy Swims":scdn("ab6761610000e5eb6dac7cd1e5ea4e48d5e7a2cd"),
-  "Foster the People":scdn("ab6761610000e5ebbc3cba3f44d07a4f1b9c4d3e"),
-  "David Byrne":scdn("ab6761610000e5eba5a7c8d19daf5f59ad7f5b67"),
-  "Röyksopp":scdn("ab6761610000e5eb4e8eba50e1a29df7e6bd6a7e"),
-  "Nine Inch Noize":scdn("ab6761610000e5eb7b91a30c5ddeb4e6fc1562db"),
-  "Disclosure":scdn("ab6761610000e5eb3bc5be7f05ce7cf5fb09b9b9"),
-  "PinkPantheress":scdn("ab6761610000e5eb4e2e9ad59cee27d17e6f1b5a"),
-  "Addison Rae":scdn("ab6761610000e5eb8e8d84cf64fa4cb0c8c38e9e"),
-  "Central Cee":scdn("ab6761610000e5eba26bbb5d8ac0c5ef8726a9c7"),
-  "Major Lazer":scdn("ab6761610000e5ebf52ddc8acba8b9ed0fa41dd4"),
-  "Boys Noize":scdn("ab6761610000e5ebe7a4a4d71d9a3db2eaf7d8a3"),
-  "Subtronics":scdn("ab6761610000e5eb17e2e5d4a82d94b6e3e5e9d4"),
-  "Armin van Buuren":scdn("ab6761610000e5eb4c5c726be52d6bbda5fa84b6"),
-  "Little Simz":scdn("ab6761610000e5eb2c01ecbbbc56be51a9bbc1cc"),
-  "Wet Leg":scdn("ab6761610000e5eb4bb6a0abd62fd2d84b434faf"),
-  "Interpol":scdn("ab6761610000e5eb0d5f8f86d0c5d0a4e1be4b7a"),
-  "Turnstile":scdn("ab6761610000e5eb3e7b0f8e9e2cc9e5b0bb5c81"),
-  "Devo":scdn("ab6761610000e5ebe31b8baaea8c71843f29cde5"),
-  "Sexyy Red":scdn("ab6761610000e5eb55f70e43e35a9cf3bb01f3c7"),
-  "Joyce Manor":scdn("ab6761610000e5eb4eeb1d57aedc07e5cae9b43c"),
-  "Blondshell":scdn("ab6761610000e5eb9f14cd13ac6e5a7e2d9bfe2f"),
-  "Blood Orange":scdn("ab6761610000e5eb4c8c9b0b8e13a3e2d5f8b4d2"),
-  "Moby":scdn("ab6761610000e5eb8e40c8aebaa98d5c72b7c481"),
-  "Solomun":scdn("ab6761610000e5eb7bde0e3c41fa28c8cde9b07b"),
-  "Adriatique":scdn("ab6761610000e5eb8d9e25a2e31de4b01fdb2e5a"),
-  "Green Velvet x AYYBO":scdn("ab6761610000e5eba2c4a6cd7e8b4b234f4d90ce"),
-  "David Guetta":scdn("ab6761610000e5ebf4f6b5b8e16b5d9a32c0a8e3"),
-  "Lykke Li":scdn("ab6761610000e5eb8e3a1bf98a65e1540bdafed8"),
-  "Geese":scdn("ab6761610000e5eb4e3f9c8a2b1d7e0f5c8a3b2e"),
-  "Holly Humberstone":scdn("ab6761610000e5eb3c6e9d2a8f1b4c7e0d5a2f1b"),
-  "Giveon":scdn("ab6761610000e5eb5e8d4c9b3a2f1e0d7c6b5a4e"),
-  "Wednesday":scdn("ab6761610000e5eb2f4a8c1e9b3d6f0e7c5a2b8d"),
+// ── ARTIST IMAGE SYSTEM ──────────────────────────────────────────────────
+// Spotify ARTIST IDs are permanent and never change (unlike image IDs which rotate).
+// We fetch current image URLs at runtime via Spotify's public oEmbed API (no auth needed).
+// Results are cached in localStorage so subsequent visits are instant.
+const SPOTIFY_IDS={
+  "Sabrina Carpenter":"74KM79TiuVKeVCqs8QtB0B",
+  "Justin Bieber":"1uNFoZAHBGtllmzznpCI3s",
+  "Karol G":"790FomKkXshlbRYZFtlgla",
+  "Anyma (Æden)":"5AkKMGBGJx5HeBTnPpQIDv",
+  "Kaskade":"2LfaB2NHNNIjNqzFR5wALs",
+  "The xx":"3iOvXCl6edW5Um0fXEBRXy",
+  "The Strokes":"2AM4ilv6UzW0uMReed2s7G",
+  "BIGBANG":"2YZyLoL8N0Wb9xBt1NhZWg",
+  "Young Thug":"50co4Is1HCEo8bhOyUWKpn",
+  "Laufey":"7gW0r5CkdEUMm42w9XpyZO",
+  "FKA Twigs":"6nB0iY1cjSY1KyhYyuIIKH",
+  "Ethel Cain":"0du5cEVh5yTK9QJze8zA0C",
+  "Alex G":"0kq3YGkfPLlD24GFkzldqV",
+  "Iggy Pop":"5xIFEt2ABVPFZ8UekFsJMa",
+  "Clipse":"5sBDP1LPnJTbvAovnqDgMa",
+  "Teddy Swims":"3rWDOJSHuuAB4k9ENnFWEq",
+  "Foster the People":"7gZfnEnfiaHsk7emQDGP1O",
+  "David Byrne":"3RL3wAyLdGPT8dQ09cO7di",
+  "Röyksopp":"3UzqKz18jJ9WMFSgBr07dL",
+  "Nine Inch Noize":"0X380XXpCoAdWEBFQFRMXKM",
+  "Disclosure":"6nS5roXSAGhTGr34W6n7Et",
+  "PinkPantheress":"7iK8PXO48WeuP03g8YR51W",
+  "Addison Rae":"6YfGMCR5AaHLAr4BKHDE9y",
+  "Central Cee":"5Y5TRrQiqgUO4S5ms5gBEQ",
+  "Major Lazer":"738wLrAtLtCtFqdk3s3GBq",
+  "Boys Noize":"3sAJHSBt0SQNB4vjCFJIbE",
+  "Subtronics":"4uSNpZMBcJbGi6xwMXUk6k",
+  "Armin van Buuren":"0eDvMgVFoNGFqwAc9tl5xO",
+  "Little Simz":"2nkdd3NMOPjKgqBH7VBpAb",
+  "Wet Leg":"4AkHEMmMGj6d4r4TQZK5Oc",
+  "Interpol":"3WaJSfKnzc65VDgmj2zU8B",
+  "Turnstile":"4nDoRrQiYLoBzwC5BhVJzF",
+  "Devo":"6tbaMXUz41TW4TbQEH72wX",
+  "Sexyy Red":"1FZmmavNk8M3lIBiQmjhzS",
+  "Joyce Manor":"4qHPeivFuUFGxgRMaLEHxo",
+  "Blondshell":"5I1ARBlPjbFzPJLpbFl00M",
+  "Blood Orange":"45BbVvDGDO4NZBGDIPiUVG",
+  "Moby":"6v8FB84lnmJs434UJf2Mrm",
+  "Solomun":"2i0o6HBaFEDjBFmKlWi3xG",
+  "Adriatique":"0adoMoDf8A28GEMRpVrCiV",
+  "Lykke Li":"7jxJ25p0pPjk0MpbUIr5hR",
 };
+
+// Image URL cache — populated at runtime via oEmbed
+const IMG_CACHE_KEY='flw_imgs_v1';
+let IMGS={};
+
+// Load from localStorage cache first (instant)
+try{
+  const cached=JSON.parse(localStorage.getItem(IMG_CACHE_KEY)||'{}');
+  if(Object.keys(cached).length>5) IMGS=cached;
+}catch(e){}
+
+// Fetch one artist image via Spotify oEmbed (public, no auth, CORS-friendly)
+async function fetchSpotifyImg(artistName,spotifyId){
+  if(IMGS[artistName]) return; // already cached
+  try{
+    const url=`https://open.spotify.com/oembed?url=https://open.spotify.com/artist/${spotifyId}`;
+    const resp=await fetch(url);
+    if(!resp.ok) return;
+    const data=await resp.json();
+    if(data.thumbnail_url){
+      IMGS[artistName]=data.thumbnail_url;
+    }
+  }catch(e){}
+}
+
+// Fetch all images in staggered batches so we don't hammer the API
+async function loadAllImages(){
+  const names=Object.keys(SPOTIFY_IDS);
+  const BATCH=5, DELAY=300;
+  for(let i=0;i<names.length;i+=BATCH){
+    const batch=names.slice(i,i+BATCH);
+    await Promise.all(batch.map(n=>fetchSpotifyImg(n,SPOTIFY_IDS[n])));
+    // Save cache after each batch
+    try{localStorage.setItem(IMG_CACHE_KEY,JSON.stringify(IMGS));}catch(e){}
+    // Re-render any visible cards/battle with new images
+    if(hasResults) buildResults(sortedArtists,scores);
+    if(bIdx<bTotal) renderBattle();
+    if(i+BATCH<names.length) await new Promise(r=>setTimeout(r,DELAY));
+  }
+}
+
 
 const RAW=[
 {n:"Sabrina Carpenter",g:"Pop",day:"Fri",stage:"Coachella Stage",wk:0},
@@ -880,7 +935,8 @@ const RAW=[
 ];
 
 function dedup(a){const s=new Set();return a.filter(x=>{if(s.has(x.n))return false;s.add(x.n);return true;});}
-const ARTISTS=dedup(RAW).map(a=>({...a,img:IMGS[a.n]||null}));
+const ARTISTS=dedup(RAW);
+function artImg(n){return IMGS[n]||null;}
 
 // ── STATE ──
 let curWK=1,sel=new Set();
@@ -1014,7 +1070,7 @@ function clearSel(){if(hasResults){confirmReset();return;}sel.clear();updateSelU
 function removeArtist(n){
   sel.delete(n);delete eloR[n];delete wins[n];delete losses[n];
   recalcScores();updateSelUI();doFilter();
-  buildResults(sortedArtists,scores);buildSchedule(sortedArtists,scores);
+  buildResults(sortedArtists,scores);buildScheduleGrid(sortedArtists,scores);
   // Update chip list if on battle-done screen
   renderBCChips();saveState();
 }
@@ -1040,7 +1096,7 @@ function renderCalib(){
 }
 function pickCalib(idx){const opp=calibQueue[calibIdx];eloUp(idx===0?calibArtist.n:opp.n,idx===0?opp.n:calibArtist.n);calibIdx++;renderCalib();}
 function skipCalib(){calibIdx++;renderCalib();}
-function finishCalib(){document.getElementById('calib-section').style.display='none';calibArtist=null;calibQueue=[];calibIdx=0;recalcScores();buildResults(sortedArtists,scores);buildSchedule(sortedArtists,scores);saveState();}
+function finishCalib(){document.getElementById('calib-section').style.display='none';calibArtist=null;calibQueue=[];calibIdx=0;recalcScores();buildResults(sortedArtists,scores);buildScheduleGrid(sortedArtists,scores);saveState();}
 
 // ── BATTLE ──
 function genQueue(list){
@@ -1055,7 +1111,7 @@ function startBattle(){
   bQueue=genQueue(list);bIdx=0;bDone=0;bTotal=bQueue.length;
   document.getElementById('tab-battle').disabled=false;
   document.getElementById('tab-results').disabled=true;
-  document.getElementById('tab-schedule').disabled=true;
+  
   document.getElementById('battle-active').style.display='block';
   document.getElementById('battle-done').style.display='none';
   goTab('battle');renderBattle();
@@ -1063,9 +1119,9 @@ function startBattle(){
 
 function mkCard(art,idx,fn){
   const g=gs(art.g),sc2=SC[art.stage]||'#666',init=art.n.split(' ').map(w=>w[0]).join('').slice(0,3);
-  // Create a rich placeholder with gradient background based on genre
-  const imgHtml=art.img
-    ?`<img class="bcimg" src="${art.img}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt=""><div class="bcph" style="display:none"><div class="bcph-bg" style="background:radial-gradient(ellipse at 30% 30%,${g.p}88 0%,${g.bg} 70%)"></div><div class="bcph-txt" style="color:${g.t}">${init}</div></div>`
+  const img=artImg(art.n);
+  const imgHtml=img
+    ?`<img class="bcimg" src="${img}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt=""><div class="bcph" style="display:none"><div class="bcph-bg" style="background:radial-gradient(ellipse at 30% 30%,${g.p}88 0%,${g.bg} 70%)"></div><div class="bcph-txt" style="color:${g.t}">${init}</div></div>`
     :`<div class="bcph"><div class="bcph-bg" style="background:radial-gradient(ellipse at 30% 30%,${g.p}88 0%,${g.bg} 70%)"></div><div class="bcph-txt" style="color:${g.t}">${init}</div></div>`;
   return`<div class="bcard" onclick="${fn}(${idx})">${imgHtml}
     <div class="bci"><div class="bcname">${art.n}</div>
@@ -1111,12 +1167,12 @@ function renderBCChips(){
 function finishBattle(){
   hasResults=true;recalcScores();
   document.getElementById('tab-results').disabled=false;
-  document.getElementById('tab-schedule').disabled=false;
+  
   // Show battle complete screen
   document.getElementById('battle-active').style.display='none';
   document.getElementById('battle-done').style.display='block';
   renderBCChips();
-  buildResults(sortedArtists,scores);buildSchedule(sortedArtists,scores);
+  buildResults(sortedArtists,scores);buildScheduleGrid(sortedArtists,scores);
   saveState();
 }
 
@@ -1172,7 +1228,8 @@ function buildResults(sorted,sc){
     let div="";
     if(t.lbl!==lastT){div=`<div class="tdiv">${t.lbl} <span class="tbadge" style="background:${t.c}20;color:${t.l};border:1px solid ${t.c}44;box-shadow:0 0 6px ${t.glow}">${t.lbl}</span></div>`;lastT=t.lbl;}
     const init=a.n.split(' ').map(w=>w[0]).join('').slice(0,2);
-    const imgH=a.img?`<img class="rimg" src="${a.img}" onerror="this.outerHTML='<div class=rph style=background:${g.bg};color:${g.t}>${init}</div>'" alt="">`:`<div class="rph" style="background:${g.bg};color:${g.t}">${init}</div>`;
+    const img=artImg(a.n);
+    const imgH=img?`<img class="rimg" src="${img}" onerror="this.outerHTML='<div class=rph style=background:${g.bg};color:${g.t}>${init}</div>'" alt="">`:`<div class="rph" style="background:${g.bg};color:${g.t}">${init}</div>`;
     return`${div}<div class="rrow"><div class="rrank">${i+1}</div>${imgH}<div class="rinfo"><div class="rname">${a.n}</div><div class="rmeta">${a.g} · ${a.day} · ${a.stage.replace(' Stage','')} · ${wr}% wr</div></div><div class="rbarbg"><div class="rbarfill" style="width:${(s/10*100).toFixed(1)}%;background:${t.c};box-shadow:0 0 5px ${t.glow}"></div></div><div class="rscore" style="color:${t.l};text-shadow:0 0 8px ${t.glow}">${s.toFixed(1)}</div><div class="ractions"><button class="raction remove" onclick="removeArtist('${sk(a.n)}')">✕</button></div></div>`;
   }).join('');
 }
@@ -1195,12 +1252,346 @@ function buildFacts(sorted,sc,gd,sd){
   document.getElementById('fun-facts').innerHTML=facts.map(f=>`<div class="fact-card"><div class="fact-text">${f.t}</div><div class="fact-sub">${f.s}</div></div>`).join('');
 }
 
-function buildSchedule(sorted,sc){
-  document.getElementById('sch-leg').innerHTML=[{l:"Tier 1 (7.5–10.0)",c:"#4A8C5C"},{l:"Tier 2 (5.0–7.4)",c:"#D4A843"},{l:"Tier 3 (3.0–4.9)",c:"#C4561A"},{l:"Unranked",c:"#404040"}].map(t=>`<div class="legi"><div class="legd" style="background:${t.c};box-shadow:0 0 5px ${t.c}66"></div>${t.l}</div>`).join('');
-  document.getElementById('mock-sch').innerHTML=`<div style="font-size:11px;color:var(--muted);margin:13px 0 4px;text-align:left">Preview — your ranked artists by day:</div>`+["Friday","Saturday","Sunday"].map(day=>{
-    const da=sorted.filter(a=>a.day===day.slice(0,3)).slice(0,14);
-    return da.length?`<div class="mday">${day}</div><div class="mslots">${da.map(a=>{const s=sc[a.n],t=tier(s);return`<div class="mslot" style="background:${t.c}22;border-color:${t.c}55;color:${t.l};box-shadow:0 2px 8px ${t.glow}">${a.n}</div>`;}).join('')}</div>`:'';
-  }).join('');
+// ── SCHEDULE DATA — Weekend 1 confirmed set times (Clashfinder rev 231, Apr 5 2026) ──
+const WK1_SCHEDULE={
+  stages:[
+    {id:"Coachella Stage", short:"Coachella",  color:"#C4561A"},
+    {id:"Outdoor Theatre", short:"Outdoor Th.", color:"#7B5EA7"},
+    {id:"Sahara",          short:"Sahara",      color:"#4A90C4"},
+    {id:"Mojave",          short:"Mojave",      color:"#4A8C5C"},
+    {id:"Gobi",            short:"Gobi",        color:"#D4A843"},
+    {id:"Sonora",          short:"Sonora",      color:"#C46080"},
+    {id:"Yuma",            short:"Yuma",        color:"#6080C4"},
+    {id:"Do LaB",          short:"Do LaB",      color:"#8C4AAC"},
+    {id:"Heineken House",  short:"Heineken",    color:"#2E7D32"},
+    {id:"Quasar",          short:"Quasar",      color:"#1A6080"},
+  ],
+  days:[
+    {
+      label:"Friday", date:"April 10",
+      sets:{
+        "Coachella Stage":[
+          {t:"4:10–4:55",  n:"Blood Orange"},
+          {t:"5:20–6:05",  n:"Foster the People"},
+          {t:"6:35–7:20",  n:"Teddy Swims"},
+          {t:"8:00–9:00",  n:"The xx"},
+          {t:"9:45–11:00", n:"Sabrina Carpenter"},
+          {t:"11:50–1:00", n:"Anyma (Æden)"},
+        ],
+        "Outdoor Theatre":[
+          {t:"4:40–5:25",  n:"Dabeull"},
+          {t:"5:50–6:40",  n:"BINI"},
+          {t:"7:10–8:00",  n:"Ethel Cain"},
+          {t:"8:55–9:45",  n:"Turnstile"},
+          {t:"10:40–11:50",n:"Disclosure"},
+        ],
+        "Sahara":[
+          {t:"4:00–4:50",  n:"Youna"},
+          {t:"5:05–5:55",  n:"HUGEL"},
+          {t:"6:10–7:10",  n:"Marlon Hoffstadt"},
+          {t:"7:35–8:35",  n:"Levity"},
+          {t:"9:00–9:45",  n:"Katseye"},
+          {t:"10:10–11:00",n:"Central Cee"},
+          {t:"11:25–12:15",n:"Sexyy Red"},
+        ],
+        "Mojave":[
+          {t:"4:25–5:10",  n:"CMAT"},
+          {t:"5:35–6:20",  n:"Slayyyter"},
+          {t:"6:45–7:35",  n:"Devo"},
+          {t:"8:00–8:50",  n:"Holly Humberstone"},
+          {t:"9:15–10:15", n:"Moby"},
+          {t:"10:40–11:30",n:"Dijon"},
+        ],
+        "Gobi":[
+          {t:"3:55–4:35",  n:"Bob Baker Marionettes"},
+          {t:"5:00–5:45",  n:"NewDad"},
+          {t:"6:10–6:55",  n:"Joyce Manor"},
+          {t:"7:20–8:05",  n:"Lykke Li"},
+          {t:"8:30–9:20",  n:"fakemink"},
+          {t:"9:45–10:35", n:"Creepy Nuts"},
+          {t:"11:00–11:50",n:"Joost"},
+        ],
+        "Sonora":[
+          {t:"2:15–2:45",  n:"Febuary"},
+          {t:"3:05–3:50",  n:"Carolina Durante"},
+          {t:"4:10–4:55",  n:"Cachirula & Loojan"},
+          {t:"5:15–6:00",  n:"The Two Lips"},
+          {t:"6:20–7:05",  n:"Ninajirachi"},
+          {t:"7:25–8:10",  n:"Fleshwater"},
+          {t:"8:30–9:15",  n:"Wednesday"},
+          {t:"9:35–10:20", n:"Hot Mulligan"},
+          {t:"10:45–11:30",n:"Not For Radio"},
+        ],
+        "Yuma":[
+          {t:"1:00–2:00",  n:"Sahar Z"},
+          {t:"2:00–3:15",  n:"Jessica Brankka"},
+          {t:"3:15–4:30",  n:"Arodes"},
+          {t:"4:30–5:45",  n:"Chloé Caillet x Rossi."},
+          {t:"5:45–7:00",  n:"Prospa"},
+          {t:"7:00–8:30",  n:"Groove Armada"},
+          {t:"8:30–9:45",  n:"Max Dean x Luke Dean"},
+          {t:"9:45–10:45", n:"Max Styler"},
+          {t:"10:45–11:45",n:"Gordo"},
+          {t:"11:45–1:00", n:"Kettama"},
+        ],
+        "Do LaB":[
+          {t:"1:00–2:15",  n:"Arthi"},
+          {t:"2:15–3:30",  n:"Effin"},
+          {t:"3:30–4:45",  n:"Lumia"},
+          {t:"4:45–6:00",  n:"1TBSP"},
+          {t:"6:00–7:15",  n:"Soul Purpose"},
+          {t:"7:15–8:30",  n:"Jazzy"},
+          {t:"8:30–9:45",  n:"Poolside's Daytime Disco"},
+          {t:"9:45–11:00", n:"Andy C"},
+          {t:"11:00–12:00",n:"Seth Troxler"},
+          {t:"12:00–1:00", n:"MCR-T"},
+        ],
+        "Heineken House":[
+          {t:"2:00–4:00",  n:"Sander Kleinenberg"},
+          {t:"4:00–5:30",  n:"Kryptogram"},
+          {t:"5:30–7:00",  n:"Robin Schulz"},
+          {t:"7:15–8:30",  n:"Wale"},
+          {t:"8:30–10:00", n:"Zerb"},
+        ],
+        "Quasar":[
+          {t:"8:00–11:00", n:"Pawsa"},
+        ],
+      }
+    },
+    {
+      label:"Saturday", date:"April 11",
+      sets:{
+        "Coachella Stage":[
+          {t:"4:35–5:20",  n:"Noga Erez"},
+          {t:"5:55–6:40",  n:"Addison Rae"},
+          {t:"7:25–8:15",  n:"Giveon"},
+          {t:"9:05–10:20", n:"The Strokes"},
+          {t:"11:20–1:00", n:"Justin Bieber"},
+        ],
+        "Outdoor Theatre":[
+          {t:"4:00–4:45",  n:"Los Hermanos Flores"},
+          {t:"5:10–6:00",  n:"Royel Otis"},
+          {t:"6:40–7:30",  n:"PinkPantheress"},
+          {t:"8:15–9:05",  n:"Sombr"},
+          {t:"10:20–11:20",n:"Labrinth"},
+        ],
+        "Sahara":[
+          {t:"4:00–5:00",  n:"ZULAN"},
+          {t:"5:15–6:15",  n:"Hamdi"},
+          {t:"6:35–7:35",  n:"Yousuke Yukimatsu"},
+          {t:"8:00–9:00",  n:"Nine Inch Noize"},
+          {t:"9:25–10:10", n:"Taemin"},
+          {t:"10:35–11:35",n:"Adriatique"},
+          {t:"12:00–1:00", n:"REZZ"},
+        ],
+        "Mojave":[
+          {t:"3:30–4:30",  n:"?????"},
+          {t:"5:25–6:10",  n:"Luísa Sonza"},
+          {t:"6:35–7:25",  n:"Fujii Kaze"},
+          {t:"7:50–8:40",  n:"Alex G"},
+          {t:"9:05–9:55",  n:"Swae Lee"},
+          {t:"10:20–11:20",n:"David Byrne"},
+          {t:"11:45–12:45",n:"Interpol"},
+        ],
+        "Gobi":[
+          {t:"4:50–5:35",  n:"WHATMORE"},
+          {t:"6:00–6:45",  n:"Geese"},
+          {t:"7:10–7:55",  n:"Blondshell"},
+          {t:"8:20–9:10",  n:"BIA"},
+          {t:"9:35–10:25", n:"Davido"},
+        ],
+        "Sonora":[
+          {t:"2:15–2:45",  n:"Die Spitz"},
+          {t:"3:05–3:45",  n:"Freak Slug"},
+          {t:"4:05–4:45",  n:"Ecca Vandal"},
+          {t:"5:05–5:50",  n:"Mind Enterprises"},
+          {t:"6:10–6:50",  n:"Ceremony"},
+          {t:"7:10–7:50",  n:"54 Ultra"},
+          {t:"8:10–8:50",  n:"rusowsky"},
+          {t:"9:15–10:00", n:"Lambrini Girls"},
+        ],
+        "Yuma":[
+          {t:"1:00–2:00",  n:"Yamagucci"},
+          {t:"2:00–3:00",  n:"GENESI"},
+          {t:"3:00–4:00",  n:"Riordan"},
+          {t:"4:00–5:15",  n:"SOSA"},
+          {t:"5:15–6:30",  n:"Mahmut Orhan"},
+          {t:"6:30–7:45",  n:"Bedouin"},
+          {t:"7:45–9:00",  n:"Ben Sterling"},
+          {t:"9:00–11:00", n:"Armin van Buuren x Adam Beyer"},
+          {t:"11:00–1:00", n:"Boys Noize"},
+        ],
+        "Do LaB":[
+          {t:"1:00–2:15",  n:"Omnom"},
+          {t:"2:15–3:30",  n:"Roddy Lima"},
+          {t:"3:30–4:45",  n:"Jigitz"},
+          {t:"4:45–6:00",  n:"Cincity"},
+          {t:"6:00–7:15",  n:"Bullet Tooth"},
+          {t:"7:15–8:30",  n:"Baby J"},
+          {t:"8:30–9:45",  n:"Andhim"},
+          {t:"9:45–11:00", n:"Tinashe (DJ Set)"},
+          {t:"11:00–12:00",n:"Jackie Hollander"},
+          {t:"12:00–1:00", n:"Anfisa Letyago"},
+        ],
+        "Heineken House":[
+          {t:"2:00–3:00",  n:"Redke"},
+          {t:"3:00–4:30",  n:"Niiko x Swae"},
+          {t:"4:30–6:00",  n:"Joshwa"},
+          {t:"6:15–7:15",  n:"Coi Leray"},
+          {t:"7:30–8:30",  n:"Sean Paul / Big Boi"},
+          {t:"8:30–10:00", n:"Andruss"},
+        ],
+        "Quasar":[
+          {t:"8:00–11:00", n:"David Guetta"},
+        ],
+      }
+    },
+    {
+      label:"Sunday", date:"April 12",
+      sets:{
+        "Coachella Stage":[
+          {t:"4:10–4:55",  n:"Little Simz"},
+          {t:"5:25–6:15",  n:"Clipse"},
+          {t:"6:50–7:50",  n:"Major Lazer"},
+          {t:"8:30–9:20",  n:"Young Thug"},
+          {t:"10:25–12:00",n:"Karol G"},
+        ],
+        "Outdoor Theatre":[
+          {t:"4:40–5:30",  n:"Wet Leg"},
+          {t:"6:05–6:55",  n:"Laufey"},
+          {t:"7:40–8:30",  n:"BIGBANG"},
+          {t:"9:25–10:25", n:"FKA Twigs"},
+        ],
+        "Sahara":[
+          {t:"4:00–5:00",  n:"BUNT."},
+          {t:"5:20–6:20",  n:"Mochakk"},
+          {t:"6:40–7:40",  n:"Worship"},
+          {t:"8:05–9:05",  n:"Duke Dumont"},
+          {t:"9:30–10:30", n:"Subtronics"},
+          {t:"10:55–11:55",n:"Kaskade"},
+        ],
+        "Mojave":[
+          {t:"3:30–4:15",  n:"Samia"},
+          {t:"4:40–5:25",  n:"The Chats"},
+          {t:"5:50–6:40",  n:"Suicidal Tendencies"},
+          {t:"7:05–7:55",  n:"Gigi Perez"},
+          {t:"8:20–9:10",  n:"Oklou"},
+          {t:"9:35–10:25", n:"Iggy Pop"},
+        ],
+        "Gobi":[
+          {t:"4:25–5:10",  n:"Flowerovlove"},
+          {t:"5:35–6:25",  n:"Morat"},
+          {t:"6:50–7:40",  n:"The Rapture"},
+          {t:"8:05–8:55",  n:"COBRAH"},
+          {t:"9:20–10:25", n:"Tomora"},
+        ],
+        "Sonora":[
+          {t:"2:15–2:50",  n:"Glitterer"},
+          {t:"3:10–3:50",  n:"Los Retros"},
+          {t:"4:10–4:50",  n:"Jane Remover"},
+          {t:"5:10–5:50",  n:"DRAIN"},
+          {t:"6:10–6:50",  n:"French Police"},
+          {t:"7:10–7:55",  n:"Model/Actriz"},
+          {t:"8:20–9:05",  n:"Black Flag"},
+          {t:"9:30–10:20", n:"ROZ"},
+        ],
+        "Yuma":[
+          {t:"1:00–2:00",  n:"LE YORA"},
+          {t:"2:00–3:15",  n:"&friends"},
+          {t:"3:15–4:30",  n:"Azzecca"},
+          {t:"4:30–5:45",  n:"MESTIZA"},
+          {t:"5:45–7:00",  n:"WhoMadeWho"},
+          {t:"7:00–8:30",  n:"Röyksopp"},
+          {t:"8:30–10:00", n:"Carlita b2b Josh Baker"},
+          {t:"10:00–12:00",n:"Green Velvet x AYYBO"},
+        ],
+        "Do LaB":[
+          {t:"1:00–2:15",  n:"Brunello"},
+          {t:"2:15–3:30",  n:"Alisha"},
+          {t:"3:30–4:45",  n:"Omar+"},
+          {t:"4:45–6:00",  n:"Sarz"},
+          {t:"6:00–7:15",  n:"Deer Jade"},
+          {t:"7:15–8:30",  n:"Maxi Meraki"},
+          {t:"8:30–9:45",  n:"Soraya"},
+          {t:"9:45–11:00", n:"Whethan"},
+          {t:"11:00–12:00",n:"Patricio"},
+          {t:"12:00–1:00", n:"Fifi"},
+        ],
+        "Heineken House":[
+          {t:"2:00–4:00",  n:"Mild Minds"},
+          {t:"4:00–5:30",  n:"Oskar Med K"},
+          {t:"5:45–7:00",  n:"Less Than Jake"},
+          {t:"7:15–8:30",  n:"Motion City Soundtrack"},
+          {t:"8:30–10:00", n:"Nimino (DJ Set)"},
+        ],
+        "Quasar":[
+          {t:"7:30–10:00", n:"Fatboy Slim"},
+        ],
+      }
+    }
+  ]
+};
+
+function buildScheduleGrid(sorted,sc){
+  const root=document.getElementById('sch-root');
+  if(!root)return;
+
+  // Tier color lookup — uses live rankings if available
+  function slotTier(name){
+    if(sc&&sc[name]!==undefined){
+      const s=sc[name];
+      if(s>=7.5)return{bg:"rgba(74,140,88,.22)",border:"#4A8C5C",text:"#6AB87A",glow:"rgba(74,140,88,.35)"};
+      if(s>=5.0)return{bg:"rgba(212,168,67,.2)",border:"#D4A843",text:"#F0C865",glow:"rgba(212,168,67,.35)"};
+      if(s>=3.0)return{bg:"rgba(196,86,26,.18)",border:"#C4561A",text:"#E8733A",glow:"rgba(196,86,26,.3)"};
+      return{bg:"rgba(60,45,30,.4)",border:"#504030",text:"#A89068",glow:"none"};
+    }
+    // Not in ranked pool — neutral dark
+    return{bg:"rgba(30,22,14,.65)",border:"rgba(74,58,38,.4)",text:"var(--text)",glow:"none"};
+  }
+
+  const stages=WK1_SCHEDULE.stages;
+  const numStages=stages.length;
+
+  let html=`<div class="sch-legend">
+    <div class="sch-leg-item"><div class="sch-leg-dot" style="background:#4A8C5C;box-shadow:0 0 6px rgba(74,140,88,.6)"></div>Tier 1 (7.5+)</div>
+    <div class="sch-leg-item"><div class="sch-leg-dot" style="background:#D4A843;box-shadow:0 0 6px rgba(212,168,67,.6)"></div>Tier 2 (5.0–7.4)</div>
+    <div class="sch-leg-item"><div class="sch-leg-dot" style="background:#C4561A;box-shadow:0 0 6px rgba(196,86,26,.5)"></div>Tier 3 (3.0–4.9)</div>
+    <div class="sch-leg-item"><div class="sch-leg-dot" style="background:#504030"></div>Ranked below 3</div>
+    <div class="sch-leg-item"><div class="sch-leg-dot" style="background:rgba(30,22,14,.9);border:1px solid rgba(74,58,38,.5)"></div>Not in your pool</div>
+  </div>`;
+
+  WK1_SCHEDULE.days.forEach(day=>{
+    html+=`<div class="sch-day-wrap">
+      <div class="sch-day-header">
+        ${day.label}
+        <span class="sch-day-sub">${day.date} · Weekend 1</span>
+      </div>
+      <div class="sch-grid" style="grid-template-columns:repeat(${numStages},minmax(105px,1fr))">`;
+
+    stages.forEach(stage=>{
+      const stColor=stage.color;
+      html+=`<div class="sch-col">
+        <div class="sch-stage-hdr" style="color:${stColor};border-bottom-color:${stColor};background:${stColor}18">
+          ${stage.short}
+        </div>`;
+
+      const sets=(day.sets[stage.id]||[]);
+      sets.forEach(set=>{
+        const t=slotTier(set.n);
+        html+=`<div class="sch-slot" style="background:${t.bg};border-left-color:${t.border};box-shadow:${t.glow!=='none'?`0 0 8px ${t.glow}`:'none'}">
+          <div class="sch-time">${set.t}</div>
+          <div class="sch-name" style="color:${t.text}">${set.n}</div>
+        </div>`;
+      });
+
+      html+=`</div>`;
+    });
+
+    html+=`</div></div>`;
+  });
+
+  html+=`<div class="sch-note">Source: Clashfinder rev 231 (Apr 5 2026) · Do LaB times are estimated slot order based on lineup · Wk 2 set times TBA</div>`;
+  root.innerHTML=html;
 }
 
 // ── RESET ──
@@ -1217,7 +1608,7 @@ function doReset(){
   document.getElementById('calib-section').style.display='none';
   document.getElementById('tab-battle').disabled=true;
   document.getElementById('tab-results').disabled=true;
-  document.getElementById('tab-schedule').disabled=true;
+  
   document.getElementById('battle-active').style.display='block';
   document.getElementById('battle-done').style.display='none';
   document.getElementById('rlist').innerHTML='';
@@ -1236,6 +1627,8 @@ function goTab(t){
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
   document.getElementById('panel-'+t).classList.add('active');
   document.getElementById('tab-'+t).classList.add('active');
+  // Always re-render schedule with latest tier data when switching to it
+  if(t==='schedule') buildScheduleGrid(sortedArtists,scores);
 }
 
 // ── INIT ──
@@ -1248,10 +1641,12 @@ function init(){
     document.getElementById('restore-banner').style.display='flex';
     document.getElementById('restore-info').textContent=`${sel.size} artists ranked · saved ${saved.savedAt?new Date(saved.savedAt).toLocaleDateString():'recently'}`;
     document.getElementById('tab-results').disabled=false;
-    document.getElementById('tab-schedule').disabled=false;
-    recalcScores();buildResults(sortedArtists,scores);buildSchedule(sortedArtists,scores);
+    
+    recalcScores();buildResults(sortedArtists,scores);buildScheduleGrid(sortedArtists,scores);
   }
   updateSelUI();buildFilters();doFilter();
+  // Start fetching artist images in background (uses cached values if available)
+  loadAllImages();
 }
 // ── FERRIS WHEEL ROTATION ──
 // Rotates one step (45°) every 6 seconds, smooth CSS transition handles the visual
