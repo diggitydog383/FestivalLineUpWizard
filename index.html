@@ -990,9 +990,9 @@ const RAW=[
 {n:"Bedouin",g:"House",day:"Sat",stage:"Yuma",wk:0},
 {n:"WhoMadeWho",g:"Electronic",day:"Sun",stage:"Yuma",wk:0},
 {n:"Nimino (DJ Set)",g:"DJ Set",day:"Sun",stage:"Heineken House",wk:0},
+{n:"Max Dean x Luke Dean",g:"Electronic",day:"Fri",stage:"Yuma",wk:0},
 ];
 
-{n:"Max Dean x Luke Dean",g:"Electronic",day:"Fri",stage:"Yuma",wk:0},
 function dedup(a){const s=new Set();return a.filter(x=>{if(s.has(x.n))return false;s.add(x.n);return true;});}
 const ARTISTS=dedup(RAW);
 function artImg(n){return IMGS[n]||null;}
