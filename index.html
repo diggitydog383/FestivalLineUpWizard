@@ -184,9 +184,21 @@ html,body{background:var(--night);min-height:100%;overflow-x:hidden}
 .save-dot{width:6px;height:6px;border-radius:50%;background:var(--sage-l);box-shadow:0 0 6px rgba(106,172,120,.7)}
 
 /* ── CHARTS ── */
-.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
-.chart-box{border-radius:10px;padding:13px;box-shadow:0 3px 16px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.04)}
-.chart-title{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px;font-weight:600}
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.chart-box{border-radius:12px;padding:16px;box-shadow:0 4px 20px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.05);display:flex;flex-direction:column}
+.chart-title{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--gold-l);text-align:center;margin-bottom:12px;text-shadow:0 0 10px rgba(212,168,67,.25)}
+.chart-donut-wrap{position:relative;width:160px;height:160px;margin:0 auto 12px}
+.chart-donut-wrap canvas{display:block}
+.chart-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+.chart-center-val{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:1px;color:var(--text);line-height:1}
+.chart-center-lbl{font-size:8px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:2px}
+.chart-legend{display:flex;flex-direction:column;gap:5px;flex:1}
+.chart-leg-row{display:flex;align-items:center;gap:7px;padding:3px 0;border-bottom:1px solid rgba(74,58,38,.15)}
+.chart-leg-row:last-child{border-bottom:none}
+.chart-leg-swatch{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.chart-leg-name{font-size:10px;color:var(--text);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chart-leg-avg{font-size:10px;font-weight:600;flex-shrink:0}
+.chart-leg-bar{height:3px;border-radius:2px;margin-top:1px;opacity:.7}
 
 /* ── FUN FACTS ── */
 .fun-facts{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
@@ -652,8 +664,22 @@ html,body{background:var(--night);min-height:100%;overflow-x:hidden}
   </div>
   <div class="save-indicator"><div class="save-dot"></div><span id="save-time">Rankings auto-saved</span></div>
   <div class="charts-row">
-    <div class="chart-box glass"><div class="chart-title">Genre Breakdown</div><canvas id="genre-chart" width="160" height="160" style="display:block;margin:0 auto"></canvas><div id="genre-legend" style="margin-top:9px;display:flex;flex-direction:column;gap:4px"></div></div>
-    <div class="chart-box glass"><div class="chart-title">Stage Breakdown</div><canvas id="stage-chart" width="160" height="160" style="display:block;margin:0 auto"></canvas><div id="stage-legend" style="margin-top:9px;display:flex;flex-direction:column;gap:4px"></div></div>
+    <div class="chart-box glass">
+      <div class="chart-title">Genre Breakdown</div>
+      <div class="chart-donut-wrap">
+        <canvas id="genre-chart" width="160" height="160"></canvas>
+        <div class="chart-center"><div class="chart-center-val" id="genre-center-val">—</div><div class="chart-center-lbl">avg score</div></div>
+      </div>
+      <div class="chart-legend" id="genre-legend"></div>
+    </div>
+    <div class="chart-box glass">
+      <div class="chart-title">Stage Breakdown</div>
+      <div class="chart-donut-wrap">
+        <canvas id="stage-chart" width="160" height="160"></canvas>
+        <div class="chart-center"><div class="chart-center-val" id="stage-center-val">—</div><div class="chart-center-lbl">avg score</div></div>
+      </div>
+      <div class="chart-legend" id="stage-legend"></div>
+    </div>
   </div>
   <div class="fun-facts" id="fun-facts"></div>
   <div class="rlist" id="rlist"></div>
@@ -1224,20 +1250,90 @@ function tier(s){
 }
 
 // ── PIE CHARTS ──
-function drawPie(cid,data,lid){
+function drawPie(cid,data,lid,centerValId){
   const cv=document.getElementById(cid);if(!cv)return;
-  const ctx=cv.getContext('2d'),cx=80,cy=80,r=68,tot=data.reduce((s,d)=>s+d.w,0);
-  ctx.clearRect(0,0,160,160);if(!tot)return;
+  const ctx=cv.getContext('2d');
+  const W=160,H=160,cx=80,cy=80;
+  const OUTER=72,INNER=46; // donut radii
+  const GAP=0.025; // gap between slices in radians
+  const tot=data.reduce((s,d)=>s+d.w,0);
+  ctx.clearRect(0,0,W,H);
+  if(!tot)return;
+
+  // Draw dark background circle
+  ctx.beginPath();ctx.arc(cx,cy,OUTER+2,0,Math.PI*2);
+  ctx.fillStyle='rgba(14,10,8,.6)';ctx.fill();
+
   let ang=-Math.PI/2;
-  data.forEach(d=>{
-    const sl=(d.w/tot)*Math.PI*2;
-    ctx.save();ctx.shadowColor=d.c;ctx.shadowBlur=10;
-    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,ang,ang+sl);ctx.closePath();ctx.fillStyle=d.c;ctx.fill();ctx.restore();
-    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,ang,ang+sl);ctx.closePath();ctx.strokeStyle='rgba(14,10,8,.9)';ctx.lineWidth=1.5;ctx.stroke();
-    if(sl>0.24){const m=ang+sl/2;ctx.fillStyle='rgba(0,0,0,.85)';ctx.font='bold 8px DM Sans,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(d.lbl.slice(0,9),cx+Math.cos(m)*r*0.62,cy+Math.sin(m)*r*0.62);}
-    ang+=sl;
+  const slices=data.map(d=>({...d,sl:(d.w/tot)*Math.PI*2}));
+
+  // Draw slices
+  slices.forEach((d,i)=>{
+    const start=ang+GAP/2, end=ang+d.sl-GAP/2;
+    if(end<=start){ang+=d.sl;return;}
+
+    // Glow pass
+    ctx.save();
+    ctx.shadowColor=d.c;ctx.shadowBlur=12;
+    ctx.beginPath();
+    ctx.arc(cx,cy,OUTER,start,end);
+    ctx.arc(cx,cy,INNER,end,start,true);
+    ctx.closePath();
+    ctx.fillStyle=d.c;ctx.fill();
+    ctx.restore();
+
+    // Clean redraw without shadow for crisp edges
+    ctx.beginPath();
+    ctx.arc(cx,cy,OUTER,start,end);
+    ctx.arc(cx,cy,INNER,end,start,true);
+    ctx.closePath();
+    ctx.fillStyle=d.c;ctx.fill();
+
+    // Label for large slices
+    if(d.sl>0.35){
+      const mid=ang+d.sl/2;
+      const labelR=(OUTER+INNER)/2;
+      const lx=cx+Math.cos(mid)*labelR;
+      const ly=cy+Math.sin(mid)*labelR;
+      ctx.fillStyle='rgba(0,0,0,.9)';
+      ctx.font='bold 7.5px DM Sans,sans-serif';
+      ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText(d.lbl.slice(0,8),lx,ly);
+    }
+    ang+=d.sl;
   });
-  document.getElementById(lid).innerHTML=data.slice(0,8).map(d=>`<div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted)"><div style="width:8px;height:8px;border-radius:2px;background:${d.c};box-shadow:0 0 5px ${d.c};flex-shrink:0"></div><span style="flex:1">${d.lbl}</span><span style="color:var(--text);font-weight:500">${d.avg.toFixed(1)}</span></div>`).join('');
+
+  // Center hole subtle ring
+  ctx.beginPath();ctx.arc(cx,cy,INNER,0,Math.PI*2);
+  ctx.fillStyle='rgba(14,10,8,.85)';ctx.fill();
+  ctx.strokeStyle='rgba(74,58,38,.3)';ctx.lineWidth=1;ctx.stroke();
+
+  // Update center stat — top item's avg score
+  if(centerValId&&data.length){
+    const top=data[0];
+    const el=document.getElementById(centerValId);
+    if(el) el.textContent=top.avg.toFixed(1);
+  }
+
+  // Legend
+  const maxAvg=Math.max(...data.map(d=>d.avg));
+  document.getElementById(lid).innerHTML=data.slice(0,7).map(d=>{
+    const barW=Math.round((d.avg/10)*100);
+    const pct=Math.round((d.w/tot)*100);
+    return`<div class="chart-leg-row">
+      <div class="chart-leg-swatch" style="background:${d.c};box-shadow:0 0 5px ${d.c}88"></div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span class="chart-leg-name">${d.lbl}</span>
+          <span class="chart-leg-avg" style="color:${d.c}">${d.avg.toFixed(1)}</span>
+        </div>
+        <div style="height:3px;border-radius:2px;background:rgba(74,58,38,.3);margin-top:3px;overflow:hidden">
+          <div style="height:100%;width:${barW}%;background:${d.c};border-radius:2px;box-shadow:0 0 4px ${d.c}88"></div>
+        </div>
+      </div>
+      <span style="font-size:9px;color:var(--muted);margin-left:5px;flex-shrink:0">${pct}%</span>
+    </div>`;
+  }).join('');
 }
 
 // ── BUILD RESULTS ──
@@ -1253,7 +1349,7 @@ function buildResults(sorted,sc){
   });
   const gd=Object.entries(gMap).map(([k,v])=>({lbl:k,w:v.w,avg:v.tot/v.n,c:v.c})).sort((a,b)=>b.w-a.w);
   const sd=Object.entries(sMap).map(([k,v])=>({lbl:k,w:v.w,avg:v.tot/v.n,c:v.c})).sort((a,b)=>b.w-a.w);
-  drawPie('genre-chart',gd,'genre-legend');drawPie('stage-chart',sd,'stage-legend');
+  drawPie('genre-chart',gd,'genre-legend','genre-center-val');drawPie('stage-chart',sd,'stage-legend','stage-center-val');
   buildFacts(sorted,sc,gd,sd);
   let lastT="";
   document.getElementById('rlist').innerHTML=sorted.map((a,i)=>{
